@@ -6,7 +6,7 @@
    <div class="col-md-12">
     <div class="panel_s">
      <div class="panel-body _buttons">
-     <?php $roleId = get_staff_role_id(); switch($roleId){ case "2": case "4": case "5": case "": ?>
+     <?php $roleId = get_staff_role_id(); switch($roleId){ case "2": case "3": case "4": case "5": case "": ?>
       <a href="#" onclick="init_lead(); return false;" class="btn mright5 btn-info pull-left display-block">
        <?php echo _l('new_lead'); ?>
      </a>

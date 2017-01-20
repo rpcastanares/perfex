@@ -77,7 +77,7 @@ if (!is_admin()) {
     $staff_userid = get_staff_user_id();
     $staff_so = get_staff_sales_office();
     array_push($where, 'AND (assigned =' . $staff_userid . ' OR addedfrom = ' . $staff_userid . ' OR is_public = 1)');
-    array_push($where, 'AND value = "' . $staff_so . '"');
+    array_push($where, 'OR value = "' . $staff_so . '"');
 }
 // Fix for big queries. Some hosting have max_join_limit
 if (count($custom_fields) > 4) {

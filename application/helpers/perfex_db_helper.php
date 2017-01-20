@@ -268,11 +268,23 @@ function get_staff_sales_office($userid = ''){
  */
 function get_sales_office_assignees(){
     $so = get_staff_sales_office();
+    $staff_role_id = get_staff_role_id();
     $CI =& get_instance();
-    $CI->db->where('tblcustomfieldsvalues.value', $so);
+    
+    switch($staff_role_id){
+        case "2": $role = array(2,4,5); break; // BDD
+        case "3": $role = array(2,3,4,5); break; // GM
+        default:  $role = array($staff_role_id); break;
+    }
+
+    // if(!empty($so)){
+        $CI->db->where('tblcustomfieldsvalues.value', $so);
+    // }
+    $CI->db->where_in('tblstaff.role',$role);
     $CI->db->select('tblstaff.staffid
                 ,tblstaff.firstname
                 ,tblstaff.lastname
+                ,tblstaff.role
                 ,tblcustomfieldsvalues.value AS sales_office')
             ->join('tblcustomfieldsvalues','tblcustomfieldsvalues.relid = tblstaff.staffid')
             ->join('tblcustomfields','tblcustomfields.id = tblcustomfieldsvalues.fieldid')

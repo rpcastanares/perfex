@@ -1,7 +1,7 @@
 <div class="lead-wrapper" <?php if(isset($lead) && ($lead->junk == 1 || $lead->lost == 1)){ echo 'lead-is-junk-or-lost';} ?>>
    <?php if(isset($lead)){ ?>
    <div class="btn-group pull-left mbot25">
-      <?php $roleId = get_staff_role_id(); switch($roleId){ case "2": case "4": case "5": case "": ?>
+      <?php $roleId = get_staff_role_id(); switch($roleId){ case "2": case "3": case "4": case "5": case "": ?>
       <a href="#" lead-edit class="btn btn-info pull-left<?php if($lead_locked == true){echo ' hide';} ?>"><i class="fa fa-pencil-square-o"></i> <?php echo _l('edit'); ?></a>
       <button type="button" class="btn btn-default dropdown-toggle mright5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       <?php echo _l('more'); ?> <span class="caret"></span>
@@ -55,7 +55,7 @@
    <i class="fa fa-user"></i>
    </a>
    <?php } ?>
-   <?php if(total_rows('tblclients',array('leadid'=>$lead->id)) == 0){ switch($roleId){ case "2": case "4": case "5": case "": ?>
+   <?php if(total_rows('tblclients',array('leadid'=>$lead->id)) == 0){ switch($roleId){ case "2": case "3": case "4": case "5": case "": ?>
    <a href="#" data-toggle="tooltip" data-title="<?php echo $convert_to_client_tooltip_email_exists; ?>" class="btn btn-success pull-right" onclick="convert_lead_to_customer(<?php echo $lead->id; ?>); return false;">
    <?php echo $text; ?>
    </a>
