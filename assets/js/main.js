@@ -2411,7 +2411,7 @@ function validate_lead_form(formHandler) {
         // source: 'required',
         // phonenumber: 'required',
         email: {
-            // required: true,
+            required: true,
             email: true,
             remote: {
                 url: admin_url + "leads/email_exists",

@@ -4,8 +4,24 @@
   <div class="row">
    <?php include_once(APPPATH . 'views/admin/includes/alerts.php'); ?>
    <div class="col-md-12">
-    
-   <?php $this->load->view('admin/includes/widgets/leads_summary')?>
+      <div class="panel_s">
+        <div class="panel-body _buttons">
+          <?php $roleId = get_staff_role_id(); switch($roleId){ case "2": case "3": case "4": case "5": case "": ?>
+              <a href="#" onclick="init_lead(); return false;" class="btn mright5 btn-info pull-left display-block">
+                  <?php echo _l('new_lead'); ?>
+              </a>
+          <?php //if(is_admin()){ ?>
+              <!-- <a href="<?php echo admin_url('leads/import'); ?>" class="btn btn-info pull-left display-block">
+                  <?php echo _l('import_leads'); ?>
+              </a> -->
+          <?php //} 
+              break; default: break; 
+              } 
+            ?>
+
+          <?php $this->load->view('admin/includes/widgets/leads_summary')?>
+        </div>
+      </div>
 
 <div class="panel_s mtop5">
  <div class="panel-body">

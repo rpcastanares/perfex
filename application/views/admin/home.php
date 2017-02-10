@@ -10,7 +10,11 @@
             </div>
 
             <div class="col-md-8">
-                <?php $this->load->view('admin/includes/widgets/leads_summary'); ?>
+                <div class="panel_s">
+                    <div class="panel-body _buttons">
+                        <?php $this->load->view('admin/includes/widgets/leads_summary'); ?>
+                    </div>
+                </div>
                 <?php //$this->load->view('admin/includes/widgets/finance_overview'); ?>
                 <?php $this->load->view('admin/includes/widgets/user_data'); ?>
                 <!-- <div class="row">
