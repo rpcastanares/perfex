@@ -11,7 +11,8 @@ class Clients extends Clients_controller
     public function index()
     {
         if (!is_client_logged_in()) {
-            redirect(site_url('clients/login'));
+            // redirect(site_url('clients/login'));
+            redirect(site_url('admin'));
         }
         $data['is_home'] = true;
         $this->load->model('reports_model');

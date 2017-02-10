@@ -253,8 +253,8 @@ function get_staff_sales_office($userid = ''){
     $so = "";
     $CI =& get_instance();
     $CI->db->where('tblcustomfieldsvalues.relid', $_userid);
-    $CI->db->where('tblcustomfieldsvalues.fieldto', 'staff');
-    $CI->db->where('tblcustomfields.slug', 'staff_sales_office');
+    $CI->db->where('tblcustomfieldsvalues.fieldto', 'sales_office');
+    $CI->db->where('tblcustomfields.slug', 'sales_office_sales_office');
     $CI->db->select('tblcustomfieldsvalues.value')
             ->join('tblcustomfields','tblcustomfields.id = tblcustomfieldsvalues.fieldid','left')
             ->from('tblcustomfieldsvalues');
@@ -266,21 +266,27 @@ function get_staff_sales_office($userid = ''){
  * Get sales office assignees
  * @return array
  */
-function get_sales_office_assignees(){
-    $so = get_staff_sales_office();
-    $staff_role_id = get_staff_role_id();
+function get_sales_office_assignees($id = ''){
+    $_id = !empty($id) ? $id : "";
+    $so = get_staff_sales_office($_id);
+    $staff_role_id = get_staff_role_id($_id);
     $CI =& get_instance();
     
     switch($staff_role_id){
-        case "2": $role = array(2,4,5); break; // BDD
-        case "3": $role = array(2,3,4,5); break; // GM
-        default:  $role = array($staff_role_id); break;
+        case 1: $role = array(1,8,9); break; //CSM
+        case 2: $role = array(1,2,4,5); break; // BDD
+        case 3: $role = array(2,3,4,5); break; // GM
+        case 6: $role = array(1,2,3,4,5,6,7,8,9); break; // CHA
+        case 7: $role = array(2,3,4,5,7); break; // CEO
+        default: $role = array($staff_role_id); break;
     }
-
-    // if(!empty($so)){
-        $CI->db->where('tblcustomfieldsvalues.value', $so);
-    // }
-    $CI->db->where_in('tblstaff.role',$role);
+    
+    $CI->db->where('tblcustomfieldsvalues.value', $so);
+    $CI->db->where('tblcustomfields.fieldto','sales_office');
+    $CI->db->order_by('tblstaff.role','asc');
+    if(isset($staff_role_id) || !empty($staff_role_id)){
+        $CI->db->where_in('tblstaff.role',$role);
+    }
     $CI->db->select('tblstaff.staffid
                 ,tblstaff.firstname
                 ,tblstaff.lastname
@@ -295,6 +301,51 @@ function get_sales_office_assignees(){
 }
 // end 01/19/2018
 
+// added by: Rey P. Castañares 02/06/2017
+// * Get Lead Default Status
+// * @return id
+function get_lead_default_status(){
+    $CI =& get_instance();
+    $CI->db->where('tblleadsstatus.isdefault', 1);
+    $CI->db->select("tblleadsstatus.id")->from("tblleadsstatus");
+
+    return $CI->db->get()->row()->id;
+}
+// * Get all sales offices
+// * @return array
+function get_sales_offices(){
+    $CI =& get_instance();
+    $CI->db->where('tblcustomfields.fieldto', "sales_office");
+    $CI->db->where('tblcustomfields.slug', "sales_office_sales_office");
+    $CI->db->select("tblcustomfields.options")->from("tblcustomfields");
+
+    $options = $CI->db->get()->row()->options;
+    return explode(",",$options);
+}
+// end 02/06/2017
+/**
+ * Get leads primary phone
+ * @param  int $leadid
+ * @return string Firstname and Lastname
+ */
+function get_lead_primary_phone($leadid){
+    $fn = "";
+    $ln = "";
+    $CI =& get_instance();
+    $CI->db->where('tblcustomfieldsvalues.relid', $leadid);
+    $CI->db->where('tblcustomfieldsvalues.fieldto', 'leads');
+    $CI->db->where_in('tblcustomfields.slug', array('leads_mobile_phone'));
+    $CI->db->select('tblcustomfields.id
+                ,tblcustomfields.name
+                ,tblcustomfields.slug
+                ,tblcustomfieldsvalues.value')
+            ->join('tblcustomfieldsvalues','tblcustomfieldsvalues.fieldid = tblcustomfields.id','left')
+            ->from('tblcustomfields');
+    $lead = $CI->db->get()->row()->value;
+    
+    return $lead;
+}
+// end 01/18/2017
 /**
  * Get client full name
  * @param  string $userid Optional

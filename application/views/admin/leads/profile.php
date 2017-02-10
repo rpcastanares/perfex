@@ -1,12 +1,17 @@
 <div class="lead-wrapper" <?php if(isset($lead) && ($lead->junk == 1 || $lead->lost == 1)){ echo 'lead-is-junk-or-lost';} ?>>
    <?php if(isset($lead)){ ?>
    <div class="btn-group pull-left mbot25">
-      <?php $roleId = get_staff_role_id(); switch($roleId){ case "2": case "3": case "4": case "5": case "": ?>
+      <?php $roleId = get_staff_role_id(); $staff_so = get_staff_sales_office(); if(is_admin()){ ?>
       <a href="#" lead-edit class="btn btn-info pull-left<?php if($lead_locked == true){echo ' hide';} ?>"><i class="fa fa-pencil-square-o"></i> <?php echo _l('edit'); ?></a>
       <button type="button" class="btn btn-default dropdown-toggle mright5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       <?php echo _l('more'); ?> <span class="caret"></span>
       </button>
-      <? break; default: break; } ?>
+      <?php }else{ switch($roleId){ case 1: case 2: case 3: case 4: case 5: case 7: ?>
+      <a href="#" lead-edit class="btn btn-info pull-left<?php if($lead_locked == true){echo ' hide';} ?>"><i class="fa fa-pencil-square-o"></i> <?php echo _l('edit'); ?></a>
+      <button type="button" class="btn btn-default dropdown-toggle mright5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <?php echo _l('more'); ?> <span class="caret"></span>
+      </button>
+      <?php break; default: break; } }?>
       <ul class="dropdown-menu dropdown-menu-left">
          <?php if($lead->junk == 0){ ?>
          <?php if($lead->lost == 0 && (total_rows('tblclients',array('leadid'=>$lead->id)) == 0)){ ?>
@@ -55,11 +60,15 @@
    <i class="fa fa-user"></i>
    </a>
    <?php } ?>
-   <?php if(total_rows('tblclients',array('leadid'=>$lead->id)) == 0){ switch($roleId){ case "2": case "3": case "4": case "5": case "": ?>
+   <?php if(total_rows('tblclients',array('leadid'=>$lead->id)) == 0){ if(is_admin()){ ?>
    <a href="#" data-toggle="tooltip" data-title="<?php echo $convert_to_client_tooltip_email_exists; ?>" class="btn btn-success pull-right" onclick="convert_lead_to_customer(<?php echo $lead->id; ?>); return false;">
    <?php echo $text; ?>
    </a>
-   <?php default: break; }} ?>
+   <?php }else{ switch($roleId){ case 1: case 8: case 9: ?>
+   <a href="#" data-toggle="tooltip" data-title="<?php echo $convert_to_client_tooltip_email_exists; ?>" class="btn btn-success pull-right" onclick="convert_lead_to_customer(<?php echo $lead->id; ?>); return false;">
+   <?php echo $text; ?>
+   </a>
+   <?php default: break; } } }?>
    <?php } ?>
    <div class="clearfix no-margin"></div>
    <hr class="no-margin" />
@@ -79,12 +88,12 @@
    </div>
    <?php } ?>
    <?php echo form_open($form_url,array('id'=>'lead_form')); ?>
-   <div class="form-group mtop15 lead-edit<?php if(isset($lead)){echo ' hide';} ?>">
+   <!-- <div class="form-group mtop15 lead-edit<?php if(isset($lead)){ echo ' hide'; } ?>">
       <div class="checkbox checkbox-primary">
          <input type="checkbox" name="is_public" <?php if(isset($lead)){if($lead->is_public == 1){echo 'checked';}}; ?> id="lead_public">
          <label for="lead_public"><?php echo _l('lead_public'); ?></label>
       </div>
-   </div>
+   </div> -->
    <div class="row">
       <div class="lead-view<?php if(!isset($lead)){echo ' hide';} ?>">
          <div class="col-md-4 col-xs-12 mtop15">
@@ -99,8 +108,8 @@
             <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->title != '' ? $lead->title : '-') ?></p>
             <p class="text-muted lead-field-heading"><?php echo _l('lead_add_edit_email'); ?></p>
             <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->email != '' ? '<a href="mailto:'.$lead->email.'">' . $lead->email.'</a>' : '-') ?></p>
-            <p class="text-muted lead-field-heading"><?php echo _l('lead_add_edit_phonenumber'); ?></p>
-            <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->phonenumber != '' ? '<a href="tel:'.$lead->phonenumber.'">' . $lead->phonenumber.'</a>' : '-') ?></p>
+            <!-- <p class="text-muted lead-field-heading"><?php echo _l('lead_add_edit_phonenumber'); ?></p>
+            <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->phonenumber != '' ? '<a href="tel:'.$lead->phonenumber.'">' . $lead->phonenumber.'</a>' : '-') ?></p> -->
             <p class="text-muted lead-field-heading"><?php echo _l('lead_company'); ?></p>
             <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->company != '' ? $lead->company : '-') ?></p>
             <p class="text-muted lead-field-heading"><?php echo _l('lead_address'); ?></p>
@@ -130,7 +139,7 @@
             <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->dateadded != '' ? time_ago($lead->dateadded) : '-') ?></p>
             <p class="text-muted lead-field-heading"><?php echo _l('leads_dt_last_contact'); ?></p>
             <p class="bold font-medium-xs"><?php echo (isset($lead) && $lead->lastcontact != '' ? time_ago($lead->lastcontact) : '-') ?></p>
-            <p class="text-muted lead-field-heading"><?php echo _l('lead_public'); ?></p>
+            <!-- <p class="text-muted lead-field-heading"><?php echo _l('lead_public'); ?></p>
             <p class="bold font-medium-xs mbot15">
                <?php if(isset($lead)){
                   if($lead->is_public == 1){
@@ -142,13 +151,32 @@
                   echo '-';
                   }
                   ?>
-            </p>
+            </p> -->
+            <?php       $cf_source = get_custom_fields('sources');
+               foreach ($cf_source as $field) {
+                 $value = get_custom_field_value($lead->id, $field['id'], 'sources'); ?>
+            <p class="text-muted lead-field-heading no-mtop"><?php echo $field['name']; ?></p>
+            <p class="bold font-medium-xs"><?php echo ($value != '' ? $value : '-') ?></p>
+            <?php } ?>
+            <?php       $cf_clienttype = get_custom_fields('clients');
+               foreach ($cf_clienttype as $field) {
+                 $value = get_custom_field_value($lead->id, $field['id'], 'clients'); ?>
+            <p class="text-muted lead-field-heading no-mtop"><?php echo $field['name']; ?></p>
+            <p class="bold font-medium-xs"><?php echo ($value != '' ? $value : '-') ?></p>
+            <?php } ?>
+            <?php       $cf_salesoffice = get_custom_fields('sales_office');
+               foreach ($cf_salesoffice as $field) {
+                 $value = get_custom_field_value($lead->id, $field['id'], 'sales_office'); ?>
+            <p class="text-muted lead-field-heading no-mtop"><?php echo $field['name']; ?></p>
+            <p class="bold font-medium-xs"><?php echo ($value != '' ? $value : '-') ?></p>
+            <?php } ?>
+            
          </div>
          <div class="col-md-4 col-xs-12 mtop15">
             <?php if(total_rows('tblcustomfields',array('fieldto'=>'leads','active'=>1)) > 0 && isset($lead)){ ?>
             <div class="lead-info-heading">
                <h4 class="no-margin font-medium-xs bold">
-                  <?php echo _l('custom_fields'); ?>
+                  <?php //echo _l('custom_fields'); ?> Additional Information
                </h4>
             </div>
             <?php       $custom_fields = get_custom_fields('leads');
@@ -163,20 +191,14 @@
       </div>
       <div class="clearfix">  </div>
       <div class="lead-edit<?php if(isset($lead)){echo ' hide';} ?>">
-         <!-- <div class="col-md-4">
-            <?php
-               $selected = '';
-               if(isset($lead)){
-                $selected = $lead->status;
-               } else if(isset($status_id)){
-                $selected = $status_id;
-               }
-               echo render_select('status',$statuses,array('id','name'),'lead_add_edit_status',$selected); ?>
-         </div> -->
-         <input type="hidden" name="status" id="status" value="2" />
+         
          <div class="col-md-4">
             <?php $selected = (isset($lead) ? $lead->source : get_option('leads_default_source')); ?>
             <?php echo render_select('source',$sources,array('id','name'),'lead_add_edit_source',$selected); ?>
+         </div>
+         <div class="col-md-4">
+            <?php $rel_id = (isset($lead) ? $lead->id : get_staff_user_id()); ?>
+            <?php echo render_custom_fields('sources', $rel_id); ?>
          </div>
          <div class="col-md-4">
             <?php
@@ -187,55 +209,83 @@
                $members = get_sales_office_assignees();
                // end 01/19/2017
                foreach($members as $assigned){
-                if(!is_staff_member($assigned['staffid'])){
-                  unset($members[$i]);
-                }
-                if(isset($lead)){
-                 if($lead->assigned == $assigned['staffid']){
-                   $selected = $assigned['staffid'];
-                 }
-               } else {
-                 if($assigned['staffid'] == get_staff_user_id()){
-                   $selected = $assigned['staffid'];
-                 }
-               }
-               $i++;
+                  if(!is_staff_member($assigned['staffid'])){
+                     unset($members[$i]);
+                  }
+                  if(isset($lead)){
+                     if($lead->assigned == $assigned['staffid']){
+                        $selected = $assigned['staffid'];
+                     }
+                  } else {
+                     if($assigned['staffid'] == get_staff_user_id()){
+                        $selected = $assigned['staffid'];
+                     }
+                  }
+                  $i++;
                }
                if(isset($lead) && $lead->assigned == get_staff_user_id() && $lead->addedfrom != get_staff_user_id() && !is_admin($lead->assigned)){
-               $assigned_attrs['disabled'] = true;
+                  $assigned_attrs['disabled'] = true;
                }
-               echo render_select('assigned',$members,array('staffid',array('firstname','lastname')),'lead_add_edit_assigned',$selected,$assigned_attrs); ?>
+               echo render_select('assigned',$members,array('staffid',array('firstname','lastname')),'Assigned To',$selected,$assigned_attrs); ?>
          </div>
+         <div class="clearfix">  </div>
+         <?php //switch($roleId){ case 1: case 2: case 4: case 5: case 8: case 9: ?>
+         <div class="col-md-4">
+            <?php
+               $selected = get_lead_default_status();
+               if(isset($lead)){
+                $selected = $lead->status;
+               // } else if(isset($status_id)){
+               //  $selected = $status_id;
+               }
+               echo render_select('status',$statuses,array('id','name'),'lead_add_edit_status',$selected); ?>
+         </div>
+         <? //break; default: break; } ?>
+         <!-- <input type="hidden" name="status" id="status" value="2" /> -->
+         <?php $rel_id = (isset($lead) ? $lead->id : get_staff_user_id()); ?>
+         <div class="col-md-4">
+            <?php echo render_custom_fields('clients',$rel_id); ?>
+         </div>
+         <div class="col-md-4">
+            
+            <?php echo render_custom_fields('sales_office',$rel_id); ?>
+         </div>
+
          <div class="clearfix"></div>
          <hr class="no-mtop" />
          <div class="col-md-12">
-            <?php $rel_id = (isset($lead) ? $lead->id : false); ?>
+            
             <?php echo render_custom_fields('leads',$rel_id); ?>
          </div>
          <div class="col-md-6">
-            <?php $value = (isset($lead) ? $lead->name : ''); ?>
-            <?php echo render_input('name','Chinese Name',$value); ?>
+            <!-- <?php $value = (isset($lead) ? $lead->name : ''); ?>
+            <?php echo render_input('name','Chinese Name',$value); ?> -->
+
             <?php $value = (isset($lead) ? $lead->title : ''); ?>
             <?php echo render_input('title','lead_title',$value); ?>
-            <?php $value = (isset($lead) ? $lead->email : ''); ?>
-            <?php echo render_input('email','lead_add_edit_email',$value); ?>
-            <?php $value = (isset($lead) ? $lead->phonenumber : ''); ?>
-            <?php echo render_input('phonenumber','lead_add_edit_phonenumber',$value); ?>
-            <?php $value = (isset($lead) ? $lead->company : ''); ?>
-            <?php echo render_input('company','lead_company',$value); ?>
-         </div>
-         <div class="col-md-6">
+
             <?php $value = (isset($lead) ? $lead->address : ''); ?>
             <?php echo render_input('address','lead_address',$value); ?>
-            <?php $value = (isset($lead) ? $lead->city : ''); ?>
-            <?php echo render_input('city','lead_city',$value); ?>
+            <!-- <?php $value = (isset($lead) ? $lead->phonenumber : ''); ?>
+            <?php echo render_input('phonenumber','lead_add_edit_phonenumber',$value); ?> -->
+
+            <?php $value = (isset($lead) ? $lead->company : ''); ?>
+            <?php echo render_input('company','lead_company',$value); ?>
             <?php $value = (isset($lead) ? $lead->state : ''); ?>
             <?php echo render_input('state','lead_state',$value); ?>
+            
+         </div>
+         <div class="col-md-6">
+            <?php $value = (isset($lead) ? $lead->email : ''); ?>
+            <?php echo render_input('email','lead_add_edit_email',$value); ?>
+            <?php $value = (isset($lead) ? $lead->city : ''); ?>
+            <?php echo render_input('city','lead_city',$value); ?>
+            
             <?php
                $countries= get_all_countries();
                $customer_default_country = get_option('customer_default_country');
                $selected =( isset($lead) ? $lead->country : $customer_default_country);
-               echo render_select( 'country',$countries,array( 'country_id',array( 'short_name')), 'lead_country',$selected,array('data-none-selected-text'=>_l('dropdown_non_selected_tex')));
+               echo render_select( 'country',$countries,array( 'country_id',array( 'short_name')), 'Country of Origin',$selected,array('data-none-selected-text'=>_l('dropdown_non_selected_tex')));
                ?>
             <?php $value = (isset($lead) ? $lead->zip : ''); ?>
             <?php echo render_input('zip','lead_zip',$value); ?>
@@ -251,7 +301,7 @@
          <div class="clearfix"></div>
       </div>
    </div>
-   <?php if(!isset($lead)){ ?>
+   <!-- <?php if(!isset($lead)){ ?>
    <div class="lead-select-date-contacted hide">
       <?php echo render_datetime_input('custom_contact_date','lead_add_edit_datecontacted','',array('data-date-end-date'=>date('Y-m-d'))); ?>
    </div>
@@ -259,7 +309,7 @@
       <input type="checkbox" name="contacted_today" id="contacted_today" checked>
       <label for="contacted_today"><?php echo _l('lead_add_edit_contected_today'); ?></label>
    </div>
-   <?php } ?>
+   <?php } ?> -->
    <?php if(isset($lead)){ ?>
    <div class="lead-latest-activity lead-view">
       <div class="lead-info-heading">
@@ -271,7 +321,7 @@
    <?php if($lead_locked == false){ ?>
    <div class="lead-edit<?php if(isset($lead)){echo ' hide';} ?>">
       <hr />
-      <button type="submit" class="btn btn-info pull-right"><?php echo _l('submit'); ?></button>
+      <button type="submit" id="btnSubmit" class="btn btn-info pull-right"><?php echo _l('submit'); ?></button>
       <button type="button" class="btn btn-default pull-right mright5" data-dismiss="modal"><?php echo _l('close'); ?></button>
    </div>
    <?php } ?>
@@ -284,6 +334,13 @@
    var lead_fields = $('.lead-wrapper').find('input,select,textarea');
    $.each(lead_fields,function(){
      $(this).attr('disabled',true);
+   });
+
+   $(function(){
+      $(".btn").on("click", function(){
+         // alert('OK');
+         // return false;
+      });
    });
 </script>
 <?php } ?>

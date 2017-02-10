@@ -1045,61 +1045,64 @@ function init_rel_tasks_table(rel_id, rel_type, selector) {
 }
 
 function get_dt_export_buttons(table) {
-    return [{
-        extend: 'collection',
-        text: dt_button_export,
-        className: 'btn btn-default-dt-options',
-        buttons: [{
-            extend: 'excelHtml5',
-            text: dt_button_excel,
-            footer: true,
-            exportOptions: {
-                columns: [':visible'],
-            }
+    return [
+    // {
+    //     extend: 'collection',
+    //     text: dt_button_export,
+    //     className: 'btn btn-default-dt-options',
+    //     buttons: 
+    //     [{
+    //         extend: 'excelHtml5',
+    //         text: dt_button_excel,
+    //         footer: true,
+    //         exportOptions: {
+    //             columns: [':visible'],
+    //         }
 
-        }, {
-            extend: 'csvHtml5',
-            text: dt_button_csv,
-            footer: true,
-            exportOptions: {
-                columns: [':visible']
-            }
+    //     }, {
+    //         extend: 'csvHtml5',
+    //         text: dt_button_csv,
+    //         footer: true,
+    //         exportOptions: {
+    //             columns: [':visible']
+    //         }
 
-        }, {
-            extend: 'pdfHtml5',
-            text: dt_button_pdf,
-            footer: true,
-            orientation: 'landscape',
-            customize: function(doc) {
-                // Fix for column widths
-                var table_api = $(table).DataTable();
-                var columns = table_api.columns().visible();
-                var columns_total = columns.length;
-                var pdf_widths = [];
-                for (i = 0; i < columns_total; i++) {
-                    // Is only visible column
-                    if (columns[i] == true) {
-                        pdf_widths.push('*');
-                    }
-                }
-                doc.styles.tableHeader.alignment = 'left'
-                doc.styles.tableHeader.margin = [5, 5, 5, 5]
-                doc.content[1].table.widths = pdf_widths;
-                doc.pageMargins = [12, 12, 12, 12];
+    //     }, {
+    //         extend: 'pdfHtml5',
+    //         text: dt_button_pdf,
+    //         footer: true,
+    //         orientation: 'landscape',
+    //         customize: function(doc) {
+    //             // Fix for column widths
+    //             var table_api = $(table).DataTable();
+    //             var columns = table_api.columns().visible();
+    //             var columns_total = columns.length;
+    //             var pdf_widths = [];
+    //             for (i = 0; i < columns_total; i++) {
+    //                 // Is only visible column
+    //                 if (columns[i] == true) {
+    //                     pdf_widths.push('*');
+    //                 }
+    //             }
+    //             doc.styles.tableHeader.alignment = 'left'
+    //             doc.styles.tableHeader.margin = [5, 5, 5, 5]
+    //             doc.content[1].table.widths = pdf_widths;
+    //             doc.pageMargins = [12, 12, 12, 12];
 
-            },
-            exportOptions: {
-                columns: [':visible'],
-            }
-        }, {
-            extend: 'print',
-            text: dt_button_print,
-            footer: true,
-            exportOptions: {
-                columns: [':visible'],
-            }
-        }],
-    }, {
+    //         },
+    //         exportOptions: {
+    //             columns: [':visible'],
+    //         }
+    //     }, {
+    //         extend: 'print',
+    //         text: dt_button_print,
+    //         footer: true,
+    //         exportOptions: {
+    //             columns: [':visible'],
+    //         }
+    //     }],
+    // }, 
+    {
         extend: 'colvis',
         postfixButtons: ['colvisRestore'],
         className: 'btn btn-default-dt-options dt-column-visibility',
@@ -2405,8 +2408,10 @@ function validate_lead_form(formHandler) {
         //         }
         //     }
         // },
-        source: 'required',
+        // source: 'required',
+        // phonenumber: 'required',
         email: {
+            // required: true,
             email: true,
             remote: {
                 url: admin_url + "leads/email_exists",
@@ -2426,19 +2431,20 @@ function validate_lead_form(formHandler) {
 
 function validate_lead_convert_to_client_form() {
     _validate_form($('#lead_to_client_form'), {
-        company: 'required',
+        // company: 'required',
         firstname: 'required',
         lastname: 'required',
-        password: {
-            required: {
-                depends: function(element) {
-                    var sent_set_password = $('input[name="send_set_password_email"]');
-                    if (sent_set_password.prop('checked') == false) {
-                        return true;
-                    }
-                }
-            }
-        },
+        phonenumber: 'required',
+        // password: {
+        //     required: {
+        //         depends: function(element) {
+        //             var sent_set_password = $('input[name="send_set_password_email"]');
+        //             if (sent_set_password.prop('checked') == false) {
+        //                 return true;
+        //             }
+        //         }
+        //     }
+        // },
         email: {
             required: true,
             email: true,
@@ -2515,6 +2521,7 @@ function init_lead_modal_data(id, url) {
     // clean the modal
     // $('.lead-modal .modal-content').html('');
     $.get(_url, function(response) {
+        console.log(response);
         $('.lead-modal .modal-content').html(response.data);
         $('#lead_reminder_modal').html(response.reminder_data);
         $('.lead-modal').modal({

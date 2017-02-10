@@ -85,7 +85,7 @@
         </a>
     </li>
     <?php } ?>
-    <?php if(has_permission('invoices','','create')){ ?>
+    <!-- <?php if(has_permission('invoices','','create')){ ?>
     <li class="divider"></li>
     <li>
         <a href="#" data-cview="billable" onclick="dt_custom_view('billable','<?php echo $view_table_name; ?>','billable'); return false;">
@@ -102,7 +102,7 @@
             <?php echo _l('task_billed_no'); ?>
         </a>
     </li>
-    <?php } ?>
+    <?php } ?> -->
     <?php if(has_permission('tasks','','view')){ ?>
     <?php if(count($tasks_filter_assignees)){ ?>
     <div class="clearfix"></div>

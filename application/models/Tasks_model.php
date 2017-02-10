@@ -8,10 +8,9 @@ class Tasks_model extends CRM_Model
         parent::__construct();
         $this->statuses = do_action('before_set_task_statuses', array_unique(array(
             1,
-            4,
             3,
             2,
-            5
+            4
         )));
         $this->load->model('projects_model');
         $this->load->model('staff_model');

@@ -2,11 +2,17 @@
 $(function(){
     validate_calendar_form();
     var settings = {
+        titleFormat: "DD MMM YY",
+        defaultView: "agendaDay",
         customButtons: {},
         header: {
-            left: 'prev,next today',
+            left: 'prev,next',
+            // left: '',
             center: 'title',
-            right: 'month,agendaWeek,agendaDay,viewFullCalendar'
+            // center: 'title',
+            // right: 'month,agendaWeek,agendaDay,viewFullCalendar'
+            right: 'agendaDay,agendaWeek,month,viewFullCalendar'
+            // right: ''
         },
         loading: function(isLoading, view) {
             if (!isLoading) { // isLoading gives boolean value

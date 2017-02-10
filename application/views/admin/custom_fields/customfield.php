@@ -39,6 +39,9 @@
                         <option value="proposal" <?php if(isset($custom_field) && $custom_field->fieldto == 'proposal'){echo 'selected';} ?>><?php echo _l('proposal'); ?></option>
                         <option value="projects" <?php if(isset($custom_field) && $custom_field->fieldto == 'projects'){echo 'selected';} ?>><?php echo _l('projects'); ?></option>
                         <option value="tickets" <?php if(isset($custom_field) && $custom_field->fieldto == 'tickets'){echo 'selected';} ?>><?php echo _l('tickets'); ?></option>
+                        <option value="sources" <?php if(isset($custom_field) && $custom_field->fieldto == 'sources'){echo 'selected';} ?>><?php echo 'Sources'; ?></option>
+                        <option value="clients" <?php if(isset($custom_field) && $custom_field->fieldto == 'clients'){echo 'selected';} ?>><?php echo 'Clients'; ?></option>
+                        <option value="sales_office" <?php if(isset($custom_field) && $custom_field->fieldto == 'sales_office'){echo 'selected';} ?>><?php echo 'Sales Office'; ?></option>
                     </select>
                     <div class="clearfix mbot15"></div>
                     <?php $value = (isset($custom_field) ? $custom_field->name : ''); ?>

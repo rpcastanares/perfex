@@ -82,7 +82,7 @@ function render_custom_fields($belongs_to, $rel_id = false, $where = array())
                 foreach ($options as $option) {
                     $option   = trim($option);
                     $selected = '';
-                    if ($option == $value) {
+                    if (trim($option) == trim($value)) {
                         $selected = ' selected';
                     }
                     $fields_html .= '<option value="' . $option . '"' . $selected . '' . set_select('custom_fields[' . $field['fieldto'] . '][' . $field['id'] . ']', $option) . '>' . $option . '</option>';
@@ -194,7 +194,7 @@ function get_custom_field_value($rel_id, $field_id, $field_to, $format = true)
             }
         }
     }
-    return $result;
+    return trim($result);
 }
 /**
  * Check for custom fields, update on $_POST

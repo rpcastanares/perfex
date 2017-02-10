@@ -12,10 +12,11 @@
               <?php echo form_hidden('rel_id',$id); ?>
               <?php echo form_hidden('rel_type',$name); ?>
               <?php echo render_datetime_input('date','set_reminder_date','',array('data-date-min-date'=>_d(date('Y-m-d')))); ?>
+              <? $members = get_sales_office_assignees(); ?>
               <?php echo render_select('staff',$members,array('staffid',array('firstname','lastname')),'reminder_set_to',get_staff_user_id()); ?>
               <?php echo render_textarea('description','reminder_description'); ?>
               <div class="form-group">
-                <label for="notify_by_email"><?php echo _l('reminder_notify_me_by_email'); ?></label>
+                <!-- <label for="notify_by_email"><?php echo _l('reminder_notify_me_by_email'); ?></label> -->
                 <div class="checkbox checkbox-primary">
                   <input type="checkbox" name="notify_by_email" id="notify_by_email">
                   <label for="notify_by_email"><?php echo _l('reminder_notify_me_by_email'); ?></label>

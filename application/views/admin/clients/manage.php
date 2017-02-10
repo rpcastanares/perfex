@@ -7,12 +7,12 @@
                 <div class="panel_s">
                     <div class="panel-body">
                         <div class="_buttons">
-                            <?php if (has_permission('customers','','create')) { ?>
+                            <!-- <?php if (has_permission('customers','','create')) { ?>
                             <a href="<?php echo admin_url('clients/client'); ?>" class="btn btn-info mright5 test pull-left display-block">
                                 <?php echo _l('new_client'); ?></a>
                                 <a href="<?php echo admin_url('clients/import'); ?>" class="btn btn-info pull-left display-block mright5">
                                     <?php echo _l('import_customers'); ?></a>
-                                    <?php } ?>
+                                    <?php } ?> -->
                                     <div class="visible-xs">
                                         <div class="clearfix"></div>
                                     </div>
@@ -165,7 +165,7 @@
                     </div>
                     <div class="panel_s">
                         <div class="panel-body">
-                         <a href="#" data-toggle="modal" data-target="#customers_bulk_action" class="btn btn-info mbot15"><?php echo _l('bulk_actions'); ?></a>
+                         <!-- <a href="#" data-toggle="modal" data-target="#customers_bulk_action" class="btn btn-info mbot15"><?php echo _l('bulk_actions'); ?></a> -->
                          <div class="modal fade bulk_actions" id="customers_bulk_action" tabindex="-1" role="dialog">
                             <div class="modal-dialog" role="document">
                              <div class="modal-content">

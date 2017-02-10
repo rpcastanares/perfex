@@ -4,20 +4,20 @@
    <div class="row">
       <?php include_once(APPPATH . 'views/admin/includes/alerts.php'); ?>
       <?php if(isset($member)){ ?>
-      <div class="col-md-12">
+      <!-- <div class="col-md-12">
          <div class="panel_s no-margin">
             <div class="panel-body no-padding-bottom">
                <?php $this->load->view('admin/staff/stats'); ?>
             </div>
          </div>
-      </div>
+      </div> -->
       <div class="member">
          <?php echo form_hidden('isedit'); ?>
          <?php echo form_hidden('memberid',$member->staffid); ?>
       </div>
       <?php } ?>
       <?php echo form_open_multipart($this->uri->uri_string(),array('class'=>'staff-form','autocomplete'=>'off')); ?>
-      <div class="col-md-5">
+      <div class="col-md-12">
          <div class="panel_s">
             <div class="panel-heading">
                <?php echo $title; ?>
@@ -55,7 +55,7 @@
                         </div>
                      </div>
                      <?php } ?>
-                     <div class="checkbox checkbox-primary">
+                     <!-- <div class="checkbox checkbox-primary">
                         <?php
                            $checked = '';
                            if(isset($member)) {
@@ -66,7 +66,7 @@
                            ?>
                         <input type="checkbox" value="1" name="is_not_staff" id="is_not_staff" <?php echo $checked; ?>>
                         <label for="is_not_staff" data-toggle="tooltip"><?php echo _l('is_not_staff_member'); ?></label>
-                     </div>
+                     </div> -->
                      <?php $value = (isset($member) ? $member->firstname : ''); ?>
                      <?php $attrs = (isset($member) ? array() : array('autofocus'=>true)); ?>
                      <?php echo render_input('firstname','staff_add_edit_firstname',$value,'text',$attrs); ?>
@@ -74,7 +74,7 @@
                      <?php echo render_input('lastname','staff_add_edit_lastname',$value); ?>
                      <?php $value = (isset($member) ? $member->email : ''); ?>
                      <?php echo render_input('email','staff_add_edit_email',$value,'email',array('autocomplete'=>'off')); ?>
-                     <div class="form-group">
+                     <!-- <div class="form-group">
                         <label for="hourly_rate"><?php echo _l('staff_hourly_rate'); ?></label>
                         <div class="input-group">
                            <input type="number" name="hourly_rate" value="<?php if(isset($member)){echo $member->hourly_rate;} else {echo 0;} ?>" id="hourly_rate" class="form-control">
@@ -82,22 +82,22 @@
                            <?php echo $base_currency->symbol; ?>
                            </span>
                         </div>
-                     </div>
+                     </div> -->
                      <?php $value = (isset($member) ? $member->phonenumber : ''); ?>
                      <?php echo render_input('phonenumber','staff_add_edit_phonenumber',$value); ?>
-                     <div class="form-group">
+                     <!-- <div class="form-group">
                         <label for="facebook" class="control-label"><i class="fa fa-facebook"></i> <?php echo _l('staff_add_edit_facebook'); ?></label>
                         <input type="text" class="form-control" name="facebook" value="<?php if(isset($member)){echo $member->facebook;} ?>">
-                     </div>
-                     <div class="form-group">
+                     </div> -->
+                     <!-- <div class="form-group">
                         <label for="linkedin" class="control-label"><i class="fa fa-linkedin"></i> <?php echo _l('staff_add_edit_linkedin'); ?></label>
                         <input type="text" class="form-control" name="linkedin" value="<?php if(isset($member)){echo $member->linkedin;} ?>">
-                     </div>
+                     </div> -->
                      <div class="form-group">
                         <label for="skype" class="control-label"><i class="fa fa-skype"></i> <?php echo _l('staff_add_edit_skype'); ?></label>
                         <input type="text" class="form-control" name="skype" value="<?php if(isset($member)){echo $member->skype;} ?>">
                      </div>
-                     <div class="form-group">
+                    <!--  <div class="form-group">
                         <label for="default_language" class="control-label"><?php echo _l('localization_default_language'); ?></label>
                         <select name="default_language" id="default_language" class="form-control selectpicker" data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
                            <option value=""><?php echo _l('system_default_string'); ?></option>
@@ -123,7 +123,9 @@
                            <option value="ltr" <?php if(isset($member) && $member->direction == 'ltr'){echo 'selected';} ?>>LTR</option>
                            <option value="rtl" <?php if(isset($member) && $member->direction == 'rtl'){echo 'selected';} ?>>RTL</option>
                         </select>
-                     </div>
+                     </div> -->
+                     
+                     <?php echo render_custom_fields('sales_office',$member->staffid); ?>
 
                      <?php $rel_id = (isset($member) ? $member->staffid : false); ?>
                      <?php echo render_custom_fields('staff',$rel_id); ?>
@@ -314,7 +316,7 @@
          </div>
       </div>
       <?php echo form_close(); ?>
-      <?php if(isset($member)){ ?>
+     <!--  <?php if(isset($member)){ ?>
       <div class="col-md-7">
          <div class="panel_s">
             <div class="panel-heading">
@@ -468,7 +470,7 @@
             </div>
          </div>
       </div>
-      <?php } ?>
+      <?php } ?> -->
    </div>
 </div>
 <?php init_tail(); ?>

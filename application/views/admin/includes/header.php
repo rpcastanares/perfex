@@ -74,29 +74,29 @@ ob_end_clean();
                     <li><a href="#" onclick="logout(); return false;"><?php echo _l('nav_logout'); ?></a></li>
                 </ul>
             </li>
-            <li class="icon">
+            <!-- <li class="icon">
                 <a href="<?php echo admin_url('business_news'); ?>" data-toggle="tooltip" data-placement="bottom" title="<?php echo _l('business_news'); ?>"><i class="fa fa-newspaper-o"></i></a>
-            </li>
-            <li class="icon">
+            </li> -->
+            <!-- <li class="icon">
                 <a href="<?php echo admin_url('todo'); ?>" data-toggle="tooltip" title="<?php echo _l('nav_todo_items'); ?>" data-placement="bottom"><i class="fa fa-list"></i>
                     <?php $_unfinished_todos = total_rows('tbltodoitems',array('finished'=>0,'staffid'=>get_staff_user_id())); ?>
                     <span class="label label-warning icon-total-indicator nav-total-todos<?php if($_unfinished_todos == 0){echo ' hide';} ?>"><?php echo $_unfinished_todos; ?></span>
                 </a>
-            </li>
+            </li> -->
             <li class="icon">
                 <a href="#" class="dropdown-toggle top-timers<?php if(count($_started_timers) > 0){echo ' text-warning';} ?>" data-toggle="dropdown"><i class="fa fa-clock-o"></i></a>
                 <ul class="dropdown-menu animated fadeIn started-timers-top width300">
                     <?php $this->load->view('admin/tasks/started_timers'); ?>
                 </ul>
             </li>
-            <?php if(is_staff_member()){ ?>
+            <!-- <?php if(is_staff_member()){ ?>
             <li class="icon">
                 <a href="#" class="open_newsfeed"><i class="fa fa-commenting" aria-hidden="true"></i></a>
             </li>
-            <?php } ?>
-            <li class="dropdown notifications-wrapper">
+            <?php } ?> -->
+            <!-- <li class="dropdown notifications-wrapper">
                 <?php $this->load->view('admin/includes/notifications'); ?>
-            </li>
+            </li> -->
         </ul>
     </div>
 </nav>

@@ -7,32 +7,37 @@
         </a>
       </li>
       <li role="presentation">
+        <a href="#home_leads" onclick="init_table_staff_projects(true);" aria-controls="home_leads" role="tab" data-toggle="tab">
+          Leads
+        </a>
+      </li>
+      <!-- <li role="presentation">
         <a href="#home_my_projects" onclick="init_table_staff_projects(true);" aria-controls="home_my_projects" role="tab" data-toggle="tab">
           <?php echo _l('home_my_projects'); ?>
         </a>
-      </li>
-      <?php if((get_option('access_tickets_to_none_staff_members') == 1 && !is_staff_member()) || is_staff_member()){ ?>
-      <li role="presentation">
+      </li> -->
+      <?php //if((get_option('access_tickets_to_none_staff_members') == 1 && !is_staff_member()) || is_staff_member()){ ?>
+      <!-- <li role="presentation">
         <a href="#home_tab_tickets" onclick="init_table_tickets(true);" aria-controls="home_tab_tickets" role="tab" data-toggle="tab">
           <?php echo _l('home_tickets'); ?>
         </a>
-      </li>
-      <?php } ?>
-      <?php if(is_staff_member()){ ?>
-      <li role="presentation">
+      </li> -->
+      <?php //} ?>
+      <?php //if(is_staff_member()){ ?>
+      <!-- <li role="presentation">
         <a href="#home_announcements" onclick="init_table_announcements(true);" aria-controls="home_announcements" role="tab" data-toggle="tab">
           <?php echo _l('home_announcements'); ?>
           <?php if($total_undismissed_announcements != 0){ echo '<span class="badge">'.$total_undismissed_announcements.'</span>';} ?>
         </a>
-      </li>
-      <?php } ?>
-      <?php if(is_admin()){ ?>
-      <li role="presentation">
+      </li> -->
+      <?php //} ?>
+      <?php //if(is_admin()){ ?>
+      <!-- <li role="presentation">
         <a href="#home_tab_activity" aria-controls="home_tab_activity" role="tab" data-toggle="tab">
           <?php echo _l('home_latest_activity'); ?>
         </a>
-      </li>
-      <?php } ?>
+      </li> -->
+      <?php //} ?>
     </ul>
     <div class="tab-content">
      <div role="tabpanel" class="tab-pane active" id="home_tab_tasks">
@@ -52,7 +57,12 @@
       </div>
       <?php $this->load->view('admin/tasks/_table'); ?>
     </div>
-    <?php if((get_option('access_tickets_to_none_staff_members') == 1 && !is_staff_member()) || is_staff_member()){ ?>
+    <div role="tabpanel" class="tab-pane" id="home_leads">
+      <a href="<?php echo admin_url('leads/manage_leads'); ?>" class="mbot20 inline-block full-width"><?php echo _l('home_widget_view_all'); ?></a>
+      <div class="clearfix"></div>
+      <?php $this->load->view('admin/leads/_table'); ?>
+    </div>
+    <!-- <?php if((get_option('access_tickets_to_none_staff_members') == 1 && !is_staff_member()) || is_staff_member()){ ?>
     <div role="tabpanel" class="tab-pane" id="home_tab_tickets">
      <a href="<?php echo admin_url('tickets'); ?>" class="mbot20 inline-block full-width"><?php echo _l('home_widget_view_all'); ?></a>
      <div class="clearfix"></div>
@@ -66,8 +76,8 @@
      </div>
      <?php echo AdminTicketsTableStructure(); ?>
    </div>
-   <?php } ?>
-   <div role="tabpanel" class="tab-pane" id="home_my_projects">
+   <?php } ?> -->
+   <!-- <div role="tabpanel" class="tab-pane" id="home_my_projects">
     <a href="<?php echo admin_url('projects'); ?>" class="mbot20 inline-block full-width"><?php echo _l('home_widget_view_all'); ?></a>
     <div class="clearfix"></div>
     <?php render_datatable(array(
@@ -76,8 +86,8 @@
       _l('project_deadline'),
       _l('project_status'),
       ),'staff-projects'); ?>
-    </div>
-    <?php if(is_staff_member()){ ?>
+    </div> -->
+    <!-- <?php if(is_staff_member()){ ?>
     <div role="tabpanel" class="tab-pane" id="home_announcements">
       <?php if(is_admin()){ ?>
       <a href="<?php echo admin_url('announcements'); ?>" class="mbot20 inline-block full-width"><?php echo _l('home_widget_view_all'); ?></a>
@@ -85,8 +95,8 @@
       <?php } ?>
       <?php render_datatable(array(_l('announcement_name'),_l('announcement_date_list'),_l('options')),'announcements'); ?>
     </div>
-    <?php } ?>
-    <?php if(is_admin()){ ?>
+    <?php } ?> -->
+    <!-- <?php if(is_admin()){ ?>
     <div role="tabpanel" class="tab-pane" id="home_tab_activity">
       <a href="<?php echo admin_url('utilities/activity_log'); ?>" class="mbot20 inline-block full-width"><?php echo _l('home_widget_view_all'); ?></a>
       <div class="clearfix"></div>
@@ -101,7 +111,7 @@
          <?php } ?>
        </div>
      </div>
-     <?php } ?>
+     <?php } ?> -->
    </div>
  </div>
 </div>

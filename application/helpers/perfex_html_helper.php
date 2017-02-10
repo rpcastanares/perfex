@@ -87,10 +87,10 @@ function init_relation_tasks_table($table_attributes = array())
         _l('task_status')
     );
 
-    if (has_permission('tasks', '', 'create') || has_permission('tasks', '', 'edit')) {
-        array_push($table_data, _l('task_billable'));
-        array_push($table_data, _l('task_billed'));
-    }
+    // if (has_permission('tasks', '', 'create') || has_permission('tasks', '', 'edit')) {
+    //     array_push($table_data, _l('task_billable'));
+    //     array_push($table_data, _l('task_billed'));
+    // }
 
     $custom_fields = get_custom_fields('tasks', array(
         'show_on_table' => 1
@@ -100,7 +100,7 @@ function init_relation_tasks_table($table_attributes = array())
         array_push($table_data, $field['name']);
     }
 
-    array_push($table_data, _l('options'));
+    // array_push($table_data, _l('options'));
     $name = 'rel-tasks';
     if ($table_attributes['data-new-rel-type'] == 'lead') {
         $name = 'rel-tasks-leads';

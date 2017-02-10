@@ -205,13 +205,13 @@
                 </div>
             </div>
         </div>
-        <button class="btn btn-info mtop20 only-save customer-form-submiter">
+        <!-- <button class="btn btn-info mtop20 only-save customer-form-submiter">
             <?php echo _l( 'submit'); ?>
-        </button>
+        </button> -->
         <?php if(!isset($client)){ ?>
-        <button class="btn btn-info mtop20 save-and-add-contact customer-form-submiter">
+        <!-- <button class="btn btn-info mtop20 save-and-add-contact customer-form-submiter">
             <?php echo _l( 'save_customer_and_add_contact'); ?>
-        </button>
+        </button> -->
         <?php } ?>
     </div>
 </div>

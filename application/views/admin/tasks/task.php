@@ -35,14 +35,14 @@
                echo '<p class="text-success no-margin">'._l('task_is_billed','<a href="'.admin_url('invoices/list_invoices/'.$task->invoice_id).'" target="_blank">'.format_invoice_number($task->invoice_id)). '</a></p>';
              }
              ?>
-             <div class="checkbox checkbox-primary no-mtop checkbox-inline">
-              <input type="checkbox" id="task_is_public" name="is_public" <?php if(isset($task)){if($task->is_public == 1){echo 'checked';}}; ?>>
-              <label for="task_is_public" data-toggle="tooltip" data-placement="bottom" title="<?php echo _l('task_public_help'); ?>"><?php echo _l('task_public'); ?></label>
+             <!-- <div class="checkbox checkbox-primary no-mtop checkbox-inline">
+              <input type="checkbox" id="task_is_public" name="is_public" <?php //if(isset($task)){if($task->is_public == 1){echo 'checked';}}; ?>>
+              <label for="task_is_public" data-toggle="tooltip" data-placement="bottom" title="<?php //echo _l('task_public_help'); ?>"><?php //echo _l('task_public'); ?></label>
             </div>
             <div class="checkbox checkbox-primary checkbox-inline">
-              <input type="checkbox" id="task_is_billable" name="billable" <?php if(isset($task)){if($task->billable == 1){echo 'checked';}} else {echo 'checked';}; ?>>
-              <label for="task_is_billable" data-toggle="tooltip" data-placement="bottom" title="<?php echo _l('task_billable_help'); ?>"><?php echo _l('task_billable'); ?></label>
-            </div>
+              <input type="checkbox" id="task_is_billable" name="billable" <?php //if(isset($task)){if($task->billable == 1){echo 'checked';}} else {echo 'checked';}; ?>>
+              <label for="task_is_billable" data-toggle="tooltip" data-placement="bottom" title="<?php //echo _l('task_billable_help'); ?>"><?php //echo _l('task_billable'); ?></label>
+            </div> -->
             <div class="task-visible-to-customer checkbox checkbox-inline checkbox-primary hide">
               <input type="checkbox" id="task_visible_to_client" name="visible_to_client" <?php if(isset($task)){if($task->visible_to_client == 1){echo 'checked';}} ?>>
               <label for="task_visible_to_client"><?php echo _l('task_visible_to_client'); ?></label>
@@ -51,10 +51,10 @@
 
             <?php $value = (isset($task) ? $task->name : ''); ?>
             <?php echo render_input('name','task_add_edit_subject',$value); ?>
-            <div class="task-hours hide">
-              <?php $value = (isset($task) ? $task->hourly_rate : 0); ?>
-              <?php echo render_input('hourly_rate','task_hourly_rate',$value); ?>
-            </div>
+            <!-- <div class="task-hours hide">
+              <?php //$value = (isset($task) ? $task->hourly_rate : 0); ?>
+              <?php //echo render_input('hourly_rate','task_hourly_rate',$value); ?>
+            </div> -->
             <div class="project-details<?php if($rel_type != 'project' && $rel_id == ''){echo ' hide';} ?>">
               <div class="form-group">
                 <label for="milestone"><?php echo _l('task_milestone'); ?></label>
@@ -161,10 +161,10 @@
     ?>
     <?php $rel_id_custom_field = (isset($task) ? $task->id : false); ?>
     <?php echo render_custom_fields('tasks',$rel_id_custom_field); ?>
-    <hr />
     <p class="bold"><?php echo _l('task_add_edit_description'); ?></p>
     <?php $contents = ''; if(isset($task)){$contents = $task->description;} ?>
-    <?php echo render_textarea('description','',$contents,array('data-task-ae-editor'=>true),array(),'','tinymce-task'); ?>
+    <!-- <?php echo render_textarea('description','',$contents,array('data-task-ae-editor'=>true),array(),'','tinymce-task'); ?> -->
+    <?php echo render_textarea('description','',$contents); ?>
   </div>
 </div>
 </div>

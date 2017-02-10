@@ -161,6 +161,7 @@ class Home_model extends CRM_Model
         return $chart;
     }
     public function leads_status_stats(){
+        $roleId = get_staff_role_id();
         $this->load->model('leads_model');
         $statuses = $this->leads_model->get_status();
         $colors      = get_system_favourite_colors();
@@ -176,7 +177,7 @@ class Home_model extends CRM_Model
 
         foreach ($statuses as $status) {
             $this->db->where('status',$status['id']);
-            if(!$this->is_admin){
+            if(!$this->is_admin && $roleId != 6){
                 $this->db->where('(addedfrom = '.get_staff_user_id().' OR is_public = 1 OR assigned = '.get_staff_user_id().')');
             }
             array_push($chart['labels'],$status['name']);

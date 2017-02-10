@@ -1,7 +1,7 @@
 <div class="modal-header">
    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
    <h4 class="modal-title"><?php echo $task->name; ?></h4>
-   <?php if($task->is_public == 0 && $task->status != 5){ ?>
+   <!-- <?php if($task->is_public == 0 && $task->status != 5){ ?>
    <small class="text-muted no-margin">
    <?php echo _l('task_is_private'); ?>
    <?php if(has_permission('tasks','','edit')) { ?> -
@@ -10,7 +10,7 @@
    </a>
    <?php } ?>
    </small>
-   <?php } ?>
+   <?php } ?> -->
    <?php if($task->billed == 1){ ?>
    <?php  echo '<p class="text-success no-margin">'._l('task_is_billed','<a href="'.admin_url('invoices/list_invoices/'.$task->invoice_id).'" target="_blank">'.format_invoice_number($task->invoice_id)). '</a></p>'; ?>
    <?php } ?>
@@ -18,24 +18,24 @@
 <div class="modal-body">
    <div class="row">
       <div class="col-md-8 task-single-col-left">
-         <?php
-            if(!empty($task->rel_id)){
-              echo '<div class="task-single-related-wrapper">';
-              $task_rel_data = get_relation_data($task->rel_type,$task->rel_id);
-              $task_rel_value = get_relation_values($task_rel_data,$task->rel_type);
-              echo '<h4 class="bold font-medium mbot15">'._l('task_single_related').': <a href="'.$task_rel_value['link'].'">'.$task_rel_value['name'].'</a></h4>';
-              echo '</div>';
-            }
-            ?>
-         <div class="clearfix"></div>
-         <?php if($task->status != 5){ ?>
-         <p class="no-margin pull-left" style="margin-right:5px !important;">
-            <a href="#" class="btn btn-default" autocomplete="off" data-loading-text="<?php echo _l('wait_text'); ?>" onclick="mark_complete(<?php echo $task->id; ?>); return false;" data-toggle="tooltip" title="<?php echo _l('task_single_mark_as_complete'); ?>">
-            <i class="fa fa-check"></i>
-            </a>
-         </p>
-         <?php } else if($task->status == 5){ ?>
-         <p class="no-margin pull-left" style="margin-right:5px !important;">
+           <?php
+               if(!empty($task->rel_id)){
+                 echo '<div class="task-single-related-wrapper">';
+                 $task_rel_data = get_relation_data($task->rel_type,$task->rel_id);
+                 $task_rel_value = get_relation_values($task_rel_data,$task->rel_type);
+                 echo '<h4 class="bold font-medium mbot15">'._l('task_single_related').': <a href="'.$task_rel_value['link'].'">'.$task_rel_value['name'].'</a></h4>';
+                 echo '</div>';
+               }
+               ?>
+            <div class="clearfix"></div>
+            <!--  <?php if($task->status != 5){ ?>
+            <p class="no-margin pull-left" style="margin-right:5px !important;">
+               <a href="#" class="btn btn-default" autocomplete="off" data-loading-text="<?php echo _l('wait_text'); ?>" onclick="mark_complete(<?php echo $task->id; ?>); return false;" data-toggle="tooltip" title="<?php echo _l('task_single_mark_as_complete'); ?>">
+               <i class="fa fa-check"></i>
+               </a>
+            </p>
+            <?php } else if($task->status == 5){ ?>
+            <p class="no-margin pull-left" style="margin-right:5px !important;">
             <a href="#" class="btn btn-success" autocomplete="off" data-loading-text="<?php echo _l('wait_text'); ?>" onclick="unmark_complete(<?php echo $task->id; ?>); return false;" data-toggle="tooltip" title="<?php echo _l('task_unmark_as_complete'); ?>">
             <i class="fa fa-check"></i>
             </a>
@@ -68,7 +68,7 @@
             </a>
          </p>
          <?php } ?>
-         <?php } ?>
+         <?php } ?> -->
          <div class="clearfix"></div>
          <hr />
          <div id="task_single_timesheets" class="<?php if(!$this->session->flashdata('task_single_timesheets_open')){echo 'hide';} ?>">
@@ -254,7 +254,8 @@
             <h4 class="bold mbot20"><?php echo _l('task_comments'); ?></h4>
          </a>
          <div class="tasks-comments inline-block full-width" <?php if(count($task->comments) == 0){echo 'style="display:none"';} ?>>
-            <textarea name="comment" id="task_comment" rows="5" class="form-control mtop15"></textarea>
+            <!-- <textarea name="comment" id="task_comment" rows="5" class="form-control mtop15"></textarea> -->
+            <?php echo render_textarea('comment',''); ?>
             <button type="button" class="btn btn-info mtop30 pull-right" autocomplete="off" data-loading-text="<?php echo _l('wait_text'); ?>" onclick="add_task_comment();">
             <?php echo _l('task_single_add_new_comment'); ?>
             </button>
@@ -340,14 +341,14 @@
                      ?>
                   <li> <a href="#" onclick="return false;" data-placement="bottom" data-toggle="popover" data-content="<?php echo $copy_template; ?>" data-html="true"><?php echo _l('task_copy'); ?></span></a>
                   </li>
-                  <?php } ?>
+                  <?php } if(is_admin()){ ?>
                   <?php if(has_permission('tasks','','delete')){ ?>
                   <li>
                      <a href="<?php echo admin_url('tasks/delete_task/'.$task->id); ?>" class="_delete task-delete">
                      <?php echo _l('task_single_delete'); ?>
                      </a>
                   </li>
-                  <?php } ?>
+                  <?php }} ?>
                </ul>
             </div>
             <?php if(has_permission('tasks','','delete') || has_permission('tasks','','edit') || has_permission('tasks','','create')){ ?>
@@ -383,35 +384,35 @@
                <?php } ?>
             </h5>
          </div>
-         <div class="<?php if(date('Y-m-d') > $task->startdate && total_rows('tbltaskstimers',array('task_id'=>$task->id)) == 0 && $task->status != 5){echo 'text-danger';}else{echo 'text-muted';} ?> task-info">
+         <!-- <div class="<?php if(date('Y-m-d') > $task->startdate && total_rows('tbltaskstimers',array('task_id'=>$task->id)) == 0 && $task->status != 5){echo 'text-danger';}else{echo 'text-muted';} ?> task-info">
             <h5><i class="fa fa-calendar-plus-o pull-left fa-margin"></i>
                <?php echo _l('task_single_start_date'); ?>: <?php echo _d($task->startdate); ?>
             </h5>
-         </div>
-         <div class="task-info <?php if(!$task->status != 5){echo ' text-danger'; }else{echo 'text-info';} ?><?php if(!$task->duedate){ echo ' hide';} ?>">
+         </div> -->
+         <!-- <div class="task-info <?php if(!$task->status != 5){echo ' text-danger'; }else{echo 'text-info';} ?><?php if(!$task->duedate){ echo ' hide';} ?>">
             <h5><i class="fa fa-calendar-check-o pull-left"></i>
                <?php echo _l('task_single_due_date'); ?>: <?php echo _d($task->duedate); ?>
             </h5>
-         </div>
+         </div> -->
          <div class="text-<?php echo get_task_priority_class($task->priority); ?> task-info">
             <h5><i class="fa pull-left fa-bolt"></i>
                <?php echo _l('task_single_priority'); ?>: <?php echo task_priority($task->priority); ?>
             </h5>
          </div>
-         <?php if($task->hourly_rate != 0 && (has_permission('tasks','','create') || has_permission('tasks','','edit'))){ ?>
+         <!-- <?php if($task->hourly_rate != 0 && (has_permission('tasks','','create') || has_permission('tasks','','edit'))){ ?>
          <div class="task-info">
             <h5><i class="fa pull-left fa-clock-o"></i>
                <?php echo _l('task_hourly_rate'); ?>: <?php echo _format_number($task->hourly_rate); ?>
             </h5>
          </div>
-         <?php } ?>
-         <?php if($task->status == 5){ ?>
+         <?php } ?> -->
+         <!-- <?php if($task->status == 5){ ?>
          <div class="task-info text-success" data-toggle="tooltip" data-title="<?php echo _dt($task->datefinished); ?>" data-placement="bottom">
             <h5><i class="fa pull-left fa-check"></i>
                <?php echo _l('task_single_finished'); ?>: <?php echo time_ago($task->datefinished); ?>
             </h5>
          </div>
-         <?php } ?>
+         <?php } ?> -->
          <?php
             $custom_fields = get_custom_fields('tasks');
             foreach($custom_fields as $field){ ?>
@@ -423,20 +424,20 @@
             </h5>
          </div>
          <?php } ?>
-         <?php if($this->tasks_model->is_task_assignee(get_staff_user_id(),$task->id) || total_rows('tbltaskstimers',array('task_id'=>$task->id,'staff_id'=>get_staff_user_id())) > 0){ ?>
+         <!-- <?php if($this->tasks_model->is_task_assignee(get_staff_user_id(),$task->id) || total_rows('tbltaskstimers',array('task_id'=>$task->id,'staff_id'=>get_staff_user_id())) > 0){ ?>
          <div class="task-info text-muted">
             <h5>
                <i class="fa fa-clock-o"></i> <?php echo _l('task_user_logged_time'); ?> <?php echo seconds_to_time_format($this->tasks_model->calc_task_total_time($task->id,' AND staff_id='.get_staff_user_id())); ?>
             </h5>
          </div>
-         <?php } ?>
-         <?php if(has_permission('tasks','','create')){ ?>
+         <?php } ?> -->
+         <!-- <?php if(has_permission('tasks','','create')){ ?>
          <div class="task-info text-success">
             <h5><i class="fa fa-clock-o"></i>
                <?php echo _l('task_total_logged_time'); ?> <?php echo seconds_to_time_format($this->tasks_model->calc_task_total_time($task->id)); ?>
             </h5>
          </div>
-         <?php } ?>
+         <?php } ?> -->
          <?php if($task->recurring == 1){
             echo '<span class="label label-warning inline-block mbot10 mtop5">'._l('recurring_task').'</span>';
             }
@@ -456,6 +457,7 @@
          <select data-width="100%" id="add_task_assignees" class="text-muted mbot10 task-action-select selectpicker<?php if(total_rows('tblstafftaskassignees',array('taskid'=>$task->id)) == 0){echo ' task-assignees-dropdown-indicator';} ?>" name="select-assignees" data-live-search="true" title='<?php echo _l('task_single_assignees_select_title'); ?>' data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
          <?php
             $options = '';
+            $staff = get_sales_office_assignees();
             foreach ($staff as $assignee) {
                 if (total_rows('tblstafftaskassignees', array(
                     'staffid' => $assignee['staffid'],
@@ -469,7 +471,7 @@
                             continue;
                         }
                     }
-                    $options .= '<option value="' . $assignee['staffid'] . '">' . get_staff_full_name($assignee['staffid']) . '</option>';
+                    $options .= '<option value="' . $assignee['staffid'] . '">' . $assignee['firstname'] . ' ' . $assignee['lastname'] . '</option>';
                 }
             }
             echo $options;
@@ -537,14 +539,14 @@
                ?>
          </div>
          <hr class="task-info-separator" />
-         <?php echo form_open_multipart('admin/tasks/upload_file',array('id'=>'task-attachment','class'=>'dropzone')); ?>
-         <?php echo form_close(); ?>
-         <?php if(get_option('dropbox_app_key') != ''){ ?>
+        <!--  <?php echo form_open_multipart('admin/tasks/upload_file',array('id'=>'task-attachment','class'=>'dropzone')); ?>
+         <?php echo form_close(); ?> -->
+         <!-- <?php if(get_option('dropbox_app_key') != ''){ ?>
          <hr />
          <div class="text-center">
             <div id="dropbox-chooser-task"></div>
          </div>
-         <?php } ?>
+         <?php } ?> -->
       </div>
    </div>
 </div>

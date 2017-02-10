@@ -82,6 +82,8 @@ class Leads_model extends CRM_Model
             die('Email already exists');
         }
 
+        // $data['status'] = 1;
+
         if (isset($data['contacted_today'])) {
             $data['lastcontact'] = date('Y-m-d H:i:s');
             unset($data['contacted_today']);
@@ -127,6 +129,14 @@ class Leads_model extends CRM_Model
                 'name' => $leadName
             ));
             // end 01/18/2017
+
+            // added by: Rey P. Castanares 02/07/2017
+            $pNo = get_lead_primary_phone($insert_id);
+            $this->db->where('id', $insert_id);
+            $this->db->update('tblleads', array(
+                'phonenumber' => $pNo
+            ));
+            // end 02/07/2017
             return $insert_id;
         }
         return false;
@@ -202,7 +212,7 @@ class Leads_model extends CRM_Model
         } else {
             $data['lastcontact'] = to_sql_date($data['lastcontact'],true);
         }
-
+        
         $this->db->where('id', $id);
         $this->db->update('tblleads', $data);
 
@@ -213,6 +223,14 @@ class Leads_model extends CRM_Model
             'name' => $leadName
         ));
         // end 01/18/2017
+
+        // added by: Rey P. Castanares 02/07/2017
+        $pNo = get_lead_primary_phone($id);
+        $this->db->where('id', $id);
+        $this->db->update('tblleads', array(
+            'phonenumber' => $pNo
+        ));
+        // end 02/07/2017
     
         if ($this->db->affected_rows() > 0) {
             $affectedRows++;

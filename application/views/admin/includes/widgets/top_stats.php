@@ -1,5 +1,5 @@
  <div class="row">
- <?php if(has_permission('invoices','','view')){ ?>
+ <!-- <?php if(has_permission('invoices','','view')){ ?>
     <div class="col-xs-12 col-md-6 col-sm-6 col-lg-3 mbot15">
       <div class="top_stats_wrapper">
          <?php
@@ -16,7 +16,7 @@
              </div>
          </div>
      </div>
-     <?php } ?>
+     <?php } ?> -->
      <?php if(is_staff_member()){ ?>
             <div class="col-xs-12 col-md-6 col-sm-6 col-lg-3 mbot15">
       <div class="top_stats_wrapper">
@@ -44,7 +44,7 @@
          </div>
      </div>
      <?php } ?>
-   <div class="col-xs-12 col-md-6 col-sm-6 col-lg-3 mbot15">
+   <!-- <div class="col-xs-12 col-md-6 col-sm-6 col-lg-3 mbot15">
       <div class="top_stats_wrapper">
         <?php
         $_where = '';
@@ -63,8 +63,8 @@
          </div>
      </div>
  </div>
-</div>
-<div class="col-xs-12 col-md-6 col-sm-6 col-lg-3 mbot15">
+</div> -->
+<!-- <div class="col-xs-12 col-md-6 col-sm-6 col-lg-3 mbot15">
   <div class="top_stats_wrapper">
      <?php
      $_where = '';
@@ -85,6 +85,6 @@
      </div>
  </div>
 </div>
-</div>
+</div> -->
 
  </div>

@@ -61,7 +61,7 @@
      <div class="panel-body">
       <?php do_action('before_render_tickets_list_table'); ?>
       <?php $this->load->view('admin/tickets/summary'); ?>
-      <a href="#" data-toggle="modal" data-target="#tickets_bulk_actions" class="btn btn-info mbot15"><?php echo _l('bulk_actions'); ?></a>
+      <!-- <a href="#" data-toggle="modal" data-target="#tickets_bulk_actions" class="btn btn-info mbot15"><?php //echo _l('bulk_actions'); ?></a> -->
       <div class="clearfix"></div>
       <?php echo AdminTicketsTableStructure('',true); ?>
     </div>

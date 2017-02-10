@@ -54,16 +54,17 @@
               $found_custom_fields = true;
            }
         }
-        if($found_custom_fields == true){
-         echo '<h4 class="bold text-center mtop30">'._l('copy_custom_fields_convert_to_customer').'</h4><hr />';
-      }
-      foreach ($custom_fields as $field) {
-         $value = get_custom_field_value($lead->id, $field['id'], 'leads');
-         if ($value == '') {
-            continue;
-         }
+      //   if($found_custom_fields == true){
+      //    echo '<h4 class="bold text-center mtop30">'._l('copy_custom_fields_convert_to_customer').'</h4><hr />';
+      // }
+      
+      // foreach ($custom_fields as $field) {
+      //    $value = get_custom_field_value($lead->id, $field['id'], 'leads');
+      //    if ($value == '') {
+      //       continue;
+      //    }
          ?>
-         <p class="bold text-info"><?php echo $field['name']; ?> (<?php echo $value; ?>)</p>
+        <!--  <p class="bold text-info"><?php echo $field['name']; ?> (<?php echo $value; ?>)</p>
          <hr />
          <p class="bold no-margin"><?php echo _l('leads_merge_customer'); ?></p>
          <div class="radio radio-primary">
@@ -124,10 +125,12 @@
          <?php echo _l('lead_dont_merge_custom_field'); ?>
       </label>
    </div>
-   <hr />
-   <?php } ?>
+   <hr /> -->
+   <?php //} ?>
    <?php echo form_hidden('original_lead_email',$lead->email); ?>
-   <div class="client_password_set_wrapper">
+   <input type="hidden" class="form-control password" name="password" value="abacare" />
+   
+   <!-- <div class="client_password_set_wrapper">
       <label for="password" class="control-label"><?php echo _l('client_password'); ?></label>
       <div class="input-group">
          <input type="password" class="form-control password" name="password" autocomplete="off">
@@ -152,7 +155,7 @@
       <input type="checkbox" name="donotsendwelcomeemail" id="donotsendwelcomeemail">
       <label for="donotsendwelcomeemail"><?php echo _l('client_do_not_send_welcome_email'); ?></label>
    </div>
-   <?php } ?>
+   <?php } ?> -->
 </div>
 <div class="modal-footer">
    <button type="button" class="btn btn-default" onclick="init_lead(<?php echo $lead->id; ?>); return false;" data-dismiss="modal"><?php echo _l('back_to_lead'); ?></button>

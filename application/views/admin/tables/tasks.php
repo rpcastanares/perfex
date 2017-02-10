@@ -17,10 +17,10 @@ if($this->_instance->input->get('bulk_actions')){
     $assignee_column = 4;
 }
 
-if (has_permission('tasks', '', 'create') || has_permission('tasks', '', 'edit')) {
-    array_push($aColumns, 'billable');
-    array_push($aColumns, 'billed');
-}
+// if (has_permission('tasks', '', 'create') || has_permission('tasks', '', 'edit')) {
+//     array_push($aColumns, 'billable');
+//     array_push($aColumns, 'billed');
+// }
 
 $where = array();
 include_once(APPPATH . 'views/admin/tables/includes/tasks_filter.php');
@@ -107,23 +107,23 @@ foreach ($rResult as $aRow) {
                 // for exporting
                 $_data .= '<span class="hide"> - ' . ucfirst($aRow['rel_type']) . '</span>';
             }
-        } else if ($aColumns[$i] == 'billable') {
-            if ($_data == 1) {
-                $billable = _l("task_billable_yes");
-            } else {
-                $billable = _l("task_billable_no");
-            }
-            $_data = $billable;
-        } else if ($aColumns[$i] == 'billed') {
-            if ($aRow['billable'] == 1) {
-                if ($_data == 1) {
-                    $_data = '<span class="label label-success inline-block">' . _l('task_billed_yes') . '</span>';
-                } else {
-                    $_data = '<span class="label label-danger inline-block">' . _l('task_billed_no') . '</span>';
-                }
-            } else {
-                $_data = '';
-            }
+        // } else if ($aColumns[$i] == 'billable') {
+        //     if ($_data == 1) {
+        //         $billable = _l("task_billable_yes");
+        //     } else {
+        //         $billable = _l("task_billable_no");
+        //     }
+        //     $_data = $billable;
+        // } else if ($aColumns[$i] == 'billed') {
+        //     if ($aRow['billable'] == 1) {
+        //         if ($_data == 1) {
+        //             $_data = '<span class="label label-success inline-block">' . _l('task_billed_yes') . '</span>';
+        //         } else {
+        //             $_data = '<span class="label label-danger inline-block">' . _l('task_billed_no') . '</span>';
+        //         }
+        //     } else {
+        //         $_data = '';
+        //     }
         } else if ($aColumns[$i] == $aColumns[$assignee_column]) {
             $assignees        = explode(',', $_data);
             $_data            = '';
@@ -132,12 +132,13 @@ foreach ($rResult as $aRow) {
 
                 if ($assigned != '') {
                     $full_name = get_staff_full_name($assigned);
-                    $_data .= '<a href="' . admin_url('profile/' . $assigned) . '">' . staff_profile_image($assigned, array(
-                        'staff-profile-image-small mright5'
-                    ), 'small', array(
-                        'data-toggle' => 'tooltip',
-                        'data-title' => $full_name
-                    )) . '</a>';
+                    // $_data .= '<a href="' . admin_url('profile/' . $assigned) . '">' . staff_profile_image($assigned, array(
+                    //     'staff-profile-image-small mright5'
+                    // ), 'small', array(
+                    //     'data-toggle' => 'tooltip',
+                    //     'data-title' => $full_name
+                    // )) . '</a>';
+                    $_data = $full_name;
                     // For exporting
                     $export_assignees .= $full_name . ', ';
 
@@ -156,40 +157,40 @@ foreach ($rResult as $aRow) {
     $options = '';
 
 
-    if (has_permission('tasks', '', 'edit')) {
-        $options .= icon_btn('#', 'pencil-square-o', 'btn-default pull-right mleft5', array(
-            'onclick' => 'edit_task(' . $aRow['id'] . '); return false'
-        ));
-    }
+    // if (has_permission('tasks', '', 'edit')) {
+    //     $options .= icon_btn('#', 'pencil-square-o', 'btn-default pull-right mleft5', array(
+    //         'onclick' => 'edit_task(' . $aRow['id'] . '); return false'
+    //     ));
+    // }
 
 
-    $class = 'btn-success no-margin';
-    $atts  = array(
-        'onclick' => 'timer_action(this,' . $aRow['id'] . '); return false'
-    );
+    // $class = 'btn-success no-margin';
+    // $atts  = array(
+    //     'onclick' => 'timer_action(this,' . $aRow['id'] . '); return false'
+    // );
 
 
     $tooltip        = '';
     $is_assigned    = $this->_instance->tasks_model->is_task_assignee(get_staff_user_id(), $aRow['id']);
-    $is_task_billed = $this->_instance->tasks_model->is_task_billed($aRow['id']);
-    if ($is_task_billed || !$is_assigned || $aRow['status'] == 5) {
-        $class = 'btn-default disabled';
-        if($aRow['status'] == 5){
-            $tooltip = ' data-toggle="tooltip" data-title="' . format_task_status($aRow['status'],false,true) . '"';
-        } else if ($is_task_billed) {
-            $tooltip = ' data-toggle="tooltip" data-title="' . _l('task_billed_cant_start_timer') . '"';
-        } else if(!$is_assigned) {
-            $tooltip = ' data-toggle="tooltip" data-title="' . _l('task_start_timer_only_assignee') . '"';
-        }
-    }
+    // $is_task_billed = $this->_instance->tasks_model->is_task_billed($aRow['id']);
+    // if ($is_task_billed || !$is_assigned || $aRow['status'] == 5) {
+    //     $class = 'btn-default disabled';
+    //     if($aRow['status'] == 5){
+    //         $tooltip = ' data-toggle="tooltip" data-title="' . format_task_status($aRow['status'],false,true) . '"';
+    //     } else if ($is_task_billed) {
+    //         $tooltip = ' data-toggle="tooltip" data-title="' . _l('task_billed_cant_start_timer') . '"';
+    //     } else if(!$is_assigned) {
+    //         $tooltip = ' data-toggle="tooltip" data-title="' . _l('task_start_timer_only_assignee') . '"';
+    //     }
+    // }
 
-    if (!$this->_instance->tasks_model->is_timer_started($aRow['id'])) {
-        $options .= '<span' . $tooltip . ' class="pull-right">' . icon_btn('#', 'clock-o', $class . ' no-margin', $atts) . '</span>';
-    } else {
-        $options .= icon_btn('#', 'clock-o', 'btn-danger pull-right no-margin', array(
-            'onclick' => 'timer_action(this,' . $aRow['id'] . ',' . $this->_instance->tasks_model->get_last_timer($aRow['id'])->id . '); return false'
-        ));
-    }
+    // if (!$this->_instance->tasks_model->is_timer_started($aRow['id'])) {
+    //     $options .= '<span' . $tooltip . ' class="pull-right">' . icon_btn('#', 'clock-o', $class . ' no-margin', $atts) . '</span>';
+    // } else {
+    //     $options .= icon_btn('#', 'clock-o', 'btn-danger pull-right no-margin', array(
+    //         'onclick' => 'timer_action(this,' . $aRow['id'] . ',' . $this->_instance->tasks_model->get_last_timer($aRow['id'])->id . '); return false'
+    //     ));
+    // }
 
     $row[]              = $options;
     $rowClass = '';

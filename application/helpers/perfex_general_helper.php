@@ -241,7 +241,8 @@ function _l($line, $label = '')
 function _d($date)
 {
     if($date == '' || is_null($date) || $date == '0000-00-00'){return '';}
-    $format = get_current_date_format();
+    // $format = get_current_date_format();
+    $format = date("d M y");
     $date = strftime($format,strtotime($date));
     return do_action('after_format_date',$date);
 }

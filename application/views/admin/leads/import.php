@@ -154,23 +154,68 @@ if($this->input->post('download_sample') === 'true'){
                                 <?php echo form_open_multipart($this->uri->uri_string(),array('id'=>'import_form')) ;?>
                                 <?php echo form_hidden('leads_import','true'); ?>
                                 <!-- <?php echo render_input('txtVCF','Choose VCF file','','file'); ?> -->
+                                
                                 <div class="form-group">
-                                    <label for="txtVCF" class="control-label">Choos VCF file</label>
-                                    <input type="file" id="txtVCF[]" name="txtVCF[]" class="form-control" multiple required value="">
+                                    <label for="txtVCF" class="control-label">Choose VCF file</label>
+                                    <input type="file" id="txtVCF" name="txtVCF[]" class="form-control" multiple required />
                                 </div>
+                                
                                 <!-- <?php echo render_select('source',$sources,array('id','name'),'lead_import_source',($this->input->post('source') ? $this->input->post('source') : get_option('leads_default_source'))); ?>
                                 <?php echo render_select('status',$statuses,array('id','name'),'lead_import_status',($this->input->post('source') ? $this->input->post('source') : get_option('leads_default_status'))); ?> -->
-                                <?php echo render_select('lead_assignee',$members,array('staffid',array('firstname','lastname')),'leads_import_assignee',$this->input->post('responsible')); ?>
+                                
+                                <?php
+                                    // $selected = get_option('leads_default_source');
+                                    echo render_select('lead_source',$sources,array('id','name'),'Source',/*$selected*/ '',array('data-none-selected-text'=>_l('dropdown_non_selected_tex'), 'required'=>true));
+                                ?>
+                                <?php
+                                    unset($members);
+                                    $members = get_sales_office_assignees(); 
+                                    // if(count($members) <= 1){
+                                    //     $selected = "";
+                                    //     foreach($members as $assigned){
+                                    //         if(!is_staff_member($assigned['staffid'])){
+                                    //             unset($members[$i]);
+                                    //         }
+                                    //         if($assigned['staffid'] == get_staff_user_id()){
+                                    //             $selected = $assigned['staffid'];
+                                    //         }
+                                    //         $i++;
+                                    //     }
+                                    // }
+                                    // $selected = get_staff_user_id();
+                                    echo render_select('lead_assignee',$members,array('staffid',array('firstname','lastname')),'leads_import_assignee',/*$selected*/ ''); 
+                                ?>
 
                                 <?php
                                    $countries= get_all_countries();
-                                   $customer_default_country = get_option('customer_default_country');
-                                   $selected =( isset($lead) ? $lead->country : $customer_default_country);
-                                   echo render_select( 'lead_country',$countries,array( 'country_id',array( 'short_name')), 'Country',$selected,array('data-none-selected-text'=>_l('dropdown_non_selected_tex')));
+                                   $customer_default_country = get_option('customer_default_country');                                   
+                                   echo render_select( 'lead_country',$countries,array( 'country_id',array( 'short_name')), 'Country','',array('data-none-selected-text'=>_l('dropdown_non_selected_tex')));
                                 ?>
+                                
+                                <?php //echo render_custom_fields('leads','',array('slug' => 'leads_sales_office')); ?>
                                 <?php
-                                    echo render_select('lead_source',$sources,array('id','name'),'Source','',array('data-none-selected-text'=>_l('dropdown_non_selected_tex'), 'required'=>true));
+                                    $sales_offices = get_custom_fields('leads',array('slug' => 'leads_sales_office'));
+                                    $sales_office = explode(",",$sales_offices[0]['options']);
+                                    $selected = get_staff_sales_office();
                                 ?>
+                                <div class="form-group">
+                                    <label for="lead_sales_office" class="control-label">Sales Office</label>
+                                    <select id="lead_sales_office" name="lead_sales_office" class="selectpicker" data-none-selected-text="Nothing selected" required="1" data-width="100%" data-live-search="true" tabindex="-98">
+                                        <option value=""></option>
+                                        <?php foreach($sales_office as $val){ $sel = trim($val) == $selected ? 'selected' : "";?>
+                                        <option value="<?=$val;?>" <?=$sel;?>><?=$val;?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+
+                                <div class="lead-select-date-contacted hide">
+                                  <?php echo render_datetime_input('custom_contact_date','lead_add_edit_datecontacted','',array('data-date-end-date'=>date('Y-m-d'))); ?>
+                               </div>
+                                <div class="checkbox checkbox-primary">
+                                   <input type="checkbox" name="contacted_today" id="contacted_today" checked>
+                                   <label for="contacted_today"><?php echo _l('lead_add_edit_contected_today'); ?></label>
+                                </div>
+
                                 <div class="form-group">
                                     <button type="button" class="btn btn-info import btn-import-submit"><?php echo _l('import'); ?></button>
                                     <!-- <button type="button" class="btn btn-info simulate btn-import-submit"><?php echo _l('simulate_import'); ?></button> -->
@@ -190,12 +235,53 @@ if($this->input->post('download_sample') === 'true'){
 <script>
     // _validate_form($('#import_form'),{file_csv:{required:true,extension: "csv"},source:'required',status:'required'});
     $(function(){
-     $('.btn-import-submit').on('click',function(){
-       // if($(this).hasClass('simulate')){
-       //   $('#import_form').append(hidden_input('simulate',true));
-       // }
-       $('#import_form').submit();
-     });
+        chkFile = function(file){
+            var ext = file.substr( (file.lastIndexOf('.') +1) );
+            switch(ext){
+                case "vcf": case "VCF": return true; break;
+                default: return false; break;
+            }
+        }
+        $('.btn-import-submit').on('click',function(){
+            // if($(this).hasClass('simulate')){
+            //   $('#import_form').append(hidden_input('simulate',true));
+            // }
+            // if($("#txtVCF").val() == ""){
+            //     alert("Please choose VCF file!");
+            //     return false;
+            // }
+            // if( $("#txtVCF").files.length == 0 ){
+            //     alert("no files selected");
+            //     return false;
+            // }else
+            var file = $("#txtVCF").val();
+            if(file == ""){
+                alert("Please select a file!");
+                return false;
+            }else
+            if(chkFile(file) == false){
+                alert("Please select a correct VCF file!");
+                return false;
+            // }else if($("#lead_source").val() == ""){
+            //     alert("Please select Lead Source!");
+            //     return false;
+            // }else if($("#lead_assignee").val() == ""){
+            //     alert("Please select Lead Assignee!");
+            //     return false;
+            // }else if($("#lead_country").val() == ""){
+            //     alert("Please select Lead Country!");
+            //     return false;
+            }else if($("#lead_sales_office").val() == ""){
+                alert("Please select Lead Sales Office!");
+                return false;
+            }else if($("#contacted_today").is(':checked') == false){
+                if($("#custom_contact_date").val() == ""){
+                    alert('Please enter Date Contact!');
+                    return false;
+                }
+            }else{ }
+            $('#import_form').submit();
+        });
     })
 </script>
 </body>

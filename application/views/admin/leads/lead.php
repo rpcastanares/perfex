@@ -9,7 +9,8 @@
          } else {
            $name = _l('lead');
          }
-         echo '#'.$lead->id . ' - ' .  $name;
+         // echo '#'.$lead->id . ' - ' .  $name;
+         echo $name;
          } else {
          echo _l('add_new',_l('lead'));
          }
@@ -39,28 +40,28 @@
             </a>
          </li>
          <?php if(isset($lead)){ ?>
-         <?php if(count($mail_activity) > 0){ ?>
+         <!-- <?php if(count($mail_activity) > 0){ ?>
          <li role="presentation">
             <a href="#tab_email_activity" aria-controls="tab_email_activity" role="tab" data-toggle="tab">
-            <?php echo _l('lead_email_activity'); ?>
+            <?php //echo _l('lead_email_activity'); ?>
             </a>
          </li>
-         <?php } ?>
-         <li role="presentation">
+         <?php } ?> -->
+         <!-- <li role="presentation">
             <a href="#tab_proposals_leads" aria-controls="tab_proposals_leads" role="tab" data-toggle="tab">
             <?php echo _l('proposals'); ?>
             </a>
-         </li>
+         </li> -->
          <li role="presentation">
             <a href="#tab_tasks_leads" aria-controls="tab_tasks_leads" role="tab" data-toggle="tab">
             <?php echo _l('tasks'); ?>
             </a>
          </li>
-         <li role="presentation">
+         <!-- <li role="presentation">
             <a href="#attachments" aria-controls="attachments" role="tab" data-toggle="tab">
-            <?php echo _l('lead_attachments'); ?>
+            <?php //echo _l('lead_attachments'); ?>
             </a>
-         </li>
+         </li> -->
          <li role="presentation">
             <a href="#lead_reminders" aria-controls="lead_reminders" role="tab" data-toggle="tab">
             <?php echo _l('leads_reminders_tab'); ?>
@@ -71,11 +72,11 @@
             <?php echo _l('lead_add_edit_notes'); ?>
             </a>
          </li>
-         <li role="presentation">
+         <!-- <li role="presentation">
             <a href="#lead_activity" aria-controls="lead_activity" role="tab" data-toggle="tab">
-            <?php echo _l('lead_add_edit_activity'); ?>
+            <?php //echo _l('lead_add_edit_activity'); ?>
             </a>
-         </li>
+         </li> -->
          <?php } ?>
       </ul>
    </div>
@@ -86,7 +87,7 @@
          <?php $this->load->view('admin/leads/profile'); ?>
       </div>
       <?php if(isset($lead)){ ?>
-      <?php if(count($mail_activity) > 0){ ?>
+      <!-- <?php if(count($mail_activity) > 0){ ?>
       <div role="tabpanel" class="tab-pane" id="tab_email_activity">
          <?php foreach($mail_activity as $_mail_activity){ ?>
          <div class="media-left">
@@ -101,7 +102,7 @@
          <div class="clearfix"></div>
          <?php } ?>
       </div>
-      <?php } ?>
+      <?php } ?> -->
       <div role="tabpanel" class="tab-pane" id="lead_activity">
          <div class="panel_s mtop20">
             <div class="activity-feed">
@@ -130,7 +131,7 @@
             </div>
          </div>
       </div>
-      <div role="tabpanel" class="tab-pane" id="tab_proposals_leads">
+      <!-- <div role="tabpanel" class="tab-pane" id="tab_proposals_leads">
          <?php if(has_permission('proposals','','create')){ ?>
          <a href="<?php echo admin_url('proposals/proposal?rel_type=lead&rel_id='.$lead->id); ?>" class="btn btn-info mbot25"><?php echo _l('new_proposal'); ?></a>
          <?php } ?>
@@ -151,7 +152,7 @@
              array_push($table_data,$field['name']);
             }
             render_datatable($table_data,'proposals-lead'); ?>
-      </div>
+      </div> -->
       <div role="tabpanel" class="tab-pane" id="tab_tasks_leads">
          <?php init_relation_tasks_table(array('data-new-rel-id'=>$lead->id,'data-new-rel-type'=>'lead')); ?>
       </div>
@@ -160,7 +161,7 @@
          <hr />
          <?php render_datatable(array( _l( 'reminder_description'), _l( 'reminder_date'), _l( 'reminder_staff'), _l( 'reminder_is_notified'), _l( 'options'), ), 'reminders-leads'); ?>
       </div>
-      <div role="tabpanel" class="tab-pane" id="attachments">
+      <!-- <div role="tabpanel" class="tab-pane" id="attachments">
          <?php echo form_open('admin/leads/add_lead_attachment',array('class'=>'dropzone mtop30','id'=>'lead-attachment-upload')); ?>
          <?php echo form_close(); ?>
          <?php if(get_option('dropbox_app_key') != ''){ ?>
@@ -171,15 +172,15 @@
          <?php } ?>
          <hr />
          <div class="mtop30" id="lead_attachments">
-            <?php $this->load->view('admin/leads/leads_attachments_template', array('attachments'=>$lead->attachments)); ?>
+            <?php //$this->load->view('admin/leads/leads_attachments_template', array('attachments'=>$lead->attachments)); ?>
          </div>
-      </div>
+      </div> -->
       <div role="tabpanel" class="tab-pane" id="lead_notes">
          <?php echo form_open(admin_url('leads/add_note/'.$lead->id),array('id'=>'lead-notes')); ?>
          <?php echo render_textarea('description'); ?>
          <button type="submit" class="btn btn-info pull-right"><?php echo _l('lead_add_edit_add_note'); ?></button>
          <div class="clearfix"></div>
-         <div class="lead-select-date-contacted hide">
+         <!-- <div class="lead-select-date-contacted hide">
             <?php echo render_datetime_input('custom_contact_date','lead_add_edit_datecontacted','',array('data-date-end-date'=>date('Y-m-d'))); ?>
          </div>
          <div class="radio radio-primary">
@@ -189,7 +190,7 @@
          <div class="radio radio-primary">
             <input type="radio" name="contacted_indicator" id="contacted_indicator_no" value="no" checked>
             <label for="contacted_indicator_no"><?php echo _l('lead_not_contacted'); ?></label>
-         </div>
+         </div> -->
          <?php echo form_close(); ?>
          <hr />
          <div class="panel_s mtop20">

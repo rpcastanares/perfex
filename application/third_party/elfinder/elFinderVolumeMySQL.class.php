@@ -188,6 +188,7 @@ class elFinderVolumeMySQL extends elFinderVolumeDriver {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function query($sql) {
+		echo $sql;
 		$this->sqlCnt++;
 		$res = $this->db->query($sql);
 		if (!$res) {

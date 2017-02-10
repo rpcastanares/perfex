@@ -63,10 +63,15 @@ class Leads extends Admin_controller
         $reminder_data = '';
 
         $data['lead_locked'] = false;
-        if ($this->input->get('status_id')) {
-            $data['status_id'] = $this->input->get('status_id');
+        // if ($this->input->get('status_id')) {
+        //     $data['status_id'] = $this->input->get('status_id');
+        // } else {
+        //     $data['status_id'] = get_option('leads_default_status');
+        // }
+        if ($this->input->get('status')) {
+            $data['status'] = $this->input->get('status');
         } else {
-            $data['status_id'] = get_option('leads_default_status');
+            $data['status'] = get_option('leads_default_status');
         }
         $lead = null;
         if (is_numeric($id)) {
@@ -76,13 +81,13 @@ class Leads extends Admin_controller
                 echo _l('lead_not_found');
                 die;
             }
-            if (!is_admin()) {
-                if (($lead->assigned != get_staff_user_id() && $lead->addedfrom != get_staff_user_id() && $lead->is_public != 1)) {
-                    header('HTTP/1.0 400 Bad error');
-                    echo _l('access_denied');
-                    die;
-                }
-            }
+            // if (!is_admin()) {
+            //     if (($lead->assigned != get_staff_user_id() && $lead->addedfrom != get_staff_user_id() && $lead->is_public != 1)) {
+            //         header('HTTP/1.0 400 Bad error');
+            //         echo _l('access_denied');
+            //         die;
+            //     }
+            // }
         }
         if ($this->input->post()) {
             if ($id == '') {
@@ -702,6 +707,7 @@ class Leads extends Admin_controller
     }
     public function import()
     {
+        $staff_id = get_staff_user_id();
         $simulate_data  = array();
         $total_imported = 0;
         // if ($this->input->post()) {
@@ -823,9 +829,15 @@ class Leads extends Admin_controller
 
         // added by: rey.castanares | Abacare 01/09/2017
         if(isset($_POST['importVCF']) && !empty($_POST['importVCF']) && $_POST['importVCF'] == 1){
-            $defaultDt = date("Y-m-d H:i:s");
+            // print_r($_POST);
+            // exit();
+            $defaultDtime = date("Y-m-d H:i:s");
+            $defaultDt = date("Y-m-d");
             $cntFiles = count($_FILES['txtVCF']['name']);
-            echo $cntFiles;
+
+            $sucmsge = 'New Lead(s) successfully imported.';
+            $err = 0;
+
             for($i=0;$i<$cntFiles;$i++){
                 if (isset($_FILES['txtVCF']['name'][$i]) && $_FILES['txtVCF']['name'][$i] != '') {
                     $tmpFile = $_FILES['txtVCF']['tmp_name'][$i];
@@ -838,7 +850,8 @@ class Leads extends Admin_controller
                         }
  
                         if($_FILES['txtVCF']['type'][$i] != "text/x-vcard"){
-                            echo 'unknown file type!';
+                            set_alert('danger', 'Unknown file type!');
+                            redirect('admin/leads/import');
                             exit();
                         }
 
@@ -851,12 +864,9 @@ class Leads extends Admin_controller
                         // PARSING OBJECT
                         $data = $parse->fromFile($newFile);
 
-                        $leadData = array();
-
                         // NAME
-                        $lastname                   = $data[0]['N'][0]['value'][0][0];
+                        $lastname                   = $data[0]['N'][0]['value'][0][0] ;
                         $firstname                  = $data[0]['N'][0]['value'][1][0];
-                        $middlename                 = $data[0]['N'][0]['value'][2][0];
                         $salutation                 = $data[0]['N'][0]['value'][3][0];
                         $suffix                     = $data[0]['N'][0]['value'][4][0];
                         $office_number              = $data[0]['TEL'][0]['value'][0][0];
@@ -866,16 +876,14 @@ class Leads extends Admin_controller
 
                         // ORG
                         $leadData['company']        = $data[0]['ORG'][0]['value'][0][0];
-                        // $dept = $data[0]['ORG'][0]['value'][1][0];
 
                         // TITLE
                         $leadData['title']          = $data[0]['TITLE'][0]['value'][0][0];
 
                         // CONTACT
-                        // $work = $data[0]['TEL'][0]['value'][0][0];
                         $leadData['phonenumber']    = $data[0]['TEL'][1]['value'][0][0];
-                        // $leadData['country']      = $_POST['lead_country'];
                         $leadData['city']           = $data[0]['ADR'][0]['value'][3][0];
+                        $leadData['state']          = $data[0]['ADR'][0]['value'][4][0];
                         $leadData['zip']            = $data[0]['ADR'][0]['value'][5][0];
 
                         // ADDR
@@ -884,20 +892,25 @@ class Leads extends Admin_controller
                         $addr .= !empty($data[0]['ADR'][0]['value'][2][2]) ? ', ' . $data[0]['ADR'][0]['value'][2][2] : '';
                         $addr .= !empty($data[0]['ADR'][0]['value'][2][3]) ? ', ' . $data[0]['ADR'][0]['value'][2][3] : '';
                         $addr .= !empty($data[0]['ADR'][0]['value'][2][4]) ? ', ' . $data[0]['ADR'][0]['value'][2][4] : '';
-                        $addr .= !empty($data[0]['ADR'][0]['value'][3][0]) ? ', ' . $data[0]['ADR'][0]['value'][3][0] : '';
-                        $addr .= !empty($data[0]['ADR'][0]['value'][5][0]) ? ', ' . $data[0]['ADR'][0]['value'][5][0] : '';
-                        $addr .= !empty($data[0]['ADR'][0]['value'][6][0]) ? ', ' . $data[0]['ADR'][0]['value'][6][0] : '';
 
                         $leadData['address']        = $addr;
-                        $leadData['dateadded']      = $defaultDt;
+                        $leadData['dateassigned']   = $defaultDt;
+                        $leadData['dateadded']      = $defaultDtime;
                         $leadData['status']         = 2;
+                        $leadData['contacted_today']= true;
+                        $leadData['addedfrom']      = get_staff_user_id();
 
                         // EMAIL
                         $leadData['email']          = $data[0]['EMAIL'][0]['value'][0][0];
-
+                        
+                        $leadData['lastcontact']    = $defaultDtime;
+                        if(!isset($_POST['contacted_today'])){
+                            $leadData['lastcontact']= $_POST['custom_contact_date'];
+                        }
+                        $leadData['source']         = $_POST['lead_source'];
                         $leadData['assigned']       = $_POST['lead_assignee'];
                         $leadData['country']        = $_POST['lead_country'];
-                        $leadData['source']         = $_POST['lead_source'];
+                        $sales_office               = trim($_POST['lead_sales_office']);
 
                         // echo '<pre>';
                         // print_r($data[0]);
@@ -905,6 +918,60 @@ class Leads extends Admin_controller
                         // REMOVE UPLOADED TEMPORARY FILE
                         unlink($newFile);
                         // exit();
+
+                        // added by: Rey P. Castanares 01/28/2017
+                        $this->db->where('email', $leadData['email']);
+                        $email = $this->db->get('tblleads')->row();
+
+                        $filename = '<br /> filename: <b>' . $_FILES['txtVCF']['name'][$i] . '</b>';
+                        if($firstname == ""){
+                            $msg[] = '<b>First name</b> is required!';
+                            $err++;
+                        }
+                        if($lastname == ""){
+                            $msg[] = '<b>Last name</b> is required!';
+                            $err++;
+                        }
+                        if($leadData['email'] == ""){
+                            $msg[] = '<b>Source</b> is required!';
+                            $err++;
+                        }
+                        if($email){
+                            $msg[] = '<b>Email address</b> is existed!';
+                            $err++;
+                        }
+                        if($leadData['phonenumber'] == ""){
+                            $msg[] = '<b>Phone number</b> is required!';
+                            $err++;
+                        }
+                        // if($leadData['source'] == ""){
+                        //     $msg[] = '<b>Source</b> is required!';
+                        //     $err++;
+                        // }
+                        // if($leadData['assigned'] == ""){
+                        //     $msg[] = '<b>Assignee</b> is required!';
+                        //     $err++;
+                        // }
+                        // if($leadData['country'] == ""){
+                        //     $msg[] = '<b>Country</b> is required!';
+                        //     $err++;
+                        // }
+                        if($sales_office == ""){
+                            $msg[] = '<b>Sales office</b> is required!';
+                            $err++;
+                        }
+
+                        $msgs = "";
+                        if($err > 0){
+                            $opt = 'danger';
+                            for($a=0;$a<count($msg);$a++){
+                                $msgs .= '<br />' . $msg[$a];
+                            }
+                            $msgs .= $filename;
+                            goto End;
+                        }
+                        $msgs = $msg;
+                        // end 01/28/2017
 
                         $lead = new Leads_model();
                         $leadId = $lead->add($leadData);
@@ -926,6 +993,8 @@ class Leads extends Admin_controller
                                         $row = $suffix; break;
                                     case "leads_office_number":
                                         $row = $office_number; break;
+                                    case "leads_sales_office":
+                                        $row = $sales_office; break;
                                     default: break;
                                 }
                                 $cstmflds = array(
@@ -937,10 +1006,26 @@ class Leads extends Admin_controller
                                 $this->db->insert('tblcustomfieldsvalues', $cstmflds);
                             }
                         }
+
+                        // added by: Rey P. Castanares 01/20/2017
+                        $leadName = get_lead_full_name($leadId);
+                        $this->db->where('id', $leadId);
+                        $this->db->update('tblleads', array(
+                            'name' => $leadName
+                        ));
+                        // end 01/20/2017
                     }
                 }
             } 
-            set_alert('success', 'New Lead(s) successfully imported.');
+
+            $opt = 'success';
+            $msgs = $sucmsge;
+            
+            End:
+            
+            unset($leadData);
+            // set_alert('success', 'New Lead(s) successfully imported.');
+            set_alert($opt, $msgs);
             redirect('admin/leads/import');
         }
 
